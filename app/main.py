@@ -4,6 +4,10 @@ from app.routes import example
 from app.database import engine, Base
 from app.routes import user
 from app.routes import auth
+from app.routes import semester
+from app.routes import course
+from app.routes import week
+from app.routes import exam
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 import jwt
@@ -52,6 +56,10 @@ def read_root():
     return {"message": "Welcome to FastAPI!"}
 
 
+app.include_router(exam.router, prefix="/api", tags=["Exam"])
+app.include_router(week.router, prefix="/api", tags=["Week"])
+app.include_router(course.router, prefix="/api", tags=["Course"])
 app.include_router(auth.router, prefix="/auth", tags=["Auth"])
 app.include_router(user.router, prefix="/api", tags=["Users"])
+app.include_router(semester.router, prefix="/api", tags=["Semester"])
 app.include_router(example.router, prefix="/example", tags=["Example"])
