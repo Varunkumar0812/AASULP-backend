@@ -1,8 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.dependencies import get_db
-from app.models.models import Course, Semester, Exam, Week, Topic
-from app.schemas.startSemester import StartSemesterData
+from app.models.models import Course, Semester, Exam, Week, Topic, Quiz
+from app.schemas.startSemester import (
+    StartSemesterData,
+    GetAllSemesters,
+    GetAllCourses,
+    GetCourseStatistics,
+)
 import json
 from app.utils.llm import getCourseRoadmap
 
@@ -10,14 +15,125 @@ from app.utils.llm import getCourseRoadmap
 router = APIRouter()
 
 
+@router.get("/getCourseStatistics")
+def getCourseStatistics(payload: GetCourseStatistics, db: Session = Depends(get_db)):
+    course = db.query(Course).filter(Course.course_id == payload.course_id).first()
+
+    exams = (
+        db.query(Exam)
+        .filter(Exam.course_id == course.course_id)
+        .order_by(Exam.rank)
+        .all()
+    )
+
+    weeks = (
+        db.query(Week)
+        .filter(Week.course_id == course.course_id)
+        .order_by(Week.rank)
+        .all()
+    )
+
+    # Set next_topic
+    next_week = next((week for week in weeks if week.status == "Pending"), None)
+    course.next_topic = next_week  # Will be serialized as object or dict
+
+    total_quizzes = 0
+    completed_quizzes = 0
+    quiz_score = 0
+
+    total_topics = 0
+    completed_topics = 0
+
+    for week in weeks:
+        topics = (
+            db.query(Topic)
+            .filter(Topic.week_id == week.week_id)
+            .order_by(Topic.title)
+            .all()
+        )
+        quizzes = db.query(Quiz).filter(Quiz.week_id == week.week_id).all()
+
+        week.quizzes = quizzes
+        week.topics = topics
+
+        quiz_performance = {}
+
+        for quiz in quizzes:
+            quiz_performance[quiz.quiz_id] = {
+                "title": quiz.title,
+                "status": quiz.status,
+                "score": quiz.score,
+            }
+
+        total_topics += len(topics)
+        completed_topics += sum(1 for topic in topics if topic.status == "Completed")
+        total_quizzes += len(quizzes)
+        completed_quizzes += sum(1 for quiz in quizzes if quiz.status == "Completed")
+        quiz_score += sum(quiz.score for quiz in quizzes if quiz.status == "Completed")
+
+    course.quiz_performance = quiz_performance
+    course.total_quizzes = total_quizzes
+    course.completed_quizzes = completed_quizzes
+    course.avg_quiz_score = (
+        round(quiz_score / total_quizzes, 2) if total_quizzes > 0 else 0
+    )
+    course.total_topics = total_topics
+    course.completed_topics = completed_topics
+    course.progress = (
+        round((completed_topics / total_topics) * 100, 2) if total_topics > 0 else 0
+    )
+    course.exams = exams
+
+    return course
+
+
+@router.get("/getAllCourses")
+def getAllCourses(payload: GetAllCourses, db: Session = Depends(get_db)):
+    courses = (
+        db.query(Course)
+        .filter(
+            Course.user_id == payload.user_id,
+            Course.semester_id == payload.semester_id,
+        )
+        .all()
+    )
+
+    for course in courses:
+        weeks = (
+            db.query(Week)
+            .filter(Week.course_id == course.course_id)
+            .order_by(Week.rank)
+            .all()
+        )
+
+        # Set next_topic
+        next_week = next((week for week in weeks if week.status == "Pending"), None)
+        course.next_topic = next_week  # Will be serialized as object or dict
+
+        # Progress calculation
+        total_weeks = len(weeks)
+        completed_weeks = sum(1 for week in weeks if week.status == "Completed")
+
+        course.progress = (
+            round((completed_weeks / total_weeks) * 100, 2) if total_weeks > 0 else 0
+        )
+
+    return courses
+
+
 # Get All Semesters
 @router.get("/getAllSemesters")
-def getAllSemesters(db: Session = Depends(get_db)):
-    semesters = db.query(Semester).all()
+def getAllSemesters(payload: GetAllSemesters, db: Session = Depends(get_db)):
+    semesters = db.query(Semester).filter(Semester.user_id == payload.user_id).all()
 
     for semester in semesters:
         courses = (
-            db.query(Course).filter(Course.semester_id == semester.semester_id).all()
+            db.query(Course)
+            .filter(
+                Course.semester_id == semester.semester_id
+                and Course.user_id == payload.user_id
+            )
+            .all()
         )
 
         total_credits = 0
@@ -41,6 +157,14 @@ def getAllSemesters(db: Session = Depends(get_db)):
             semester.gpa = round(weighted_score / total_credits, 2)
         else:
             semester.gpa = None  # or 0.0 if preferred
+
+    nxt_semester = {
+        "title": "Semester " + str(len(semesters)),
+        "status": "Not Started",
+        "gpa": 0.0,
+    }
+
+    semesters.append(nxt_semester)
 
     return semesters
 

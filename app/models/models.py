@@ -86,14 +86,16 @@ class Week(Base):
     title = Column(String)
     rank = Column(Integer)
     course_id = Column(Integer, ForeignKey("course.course_id"))
-    quiz_id = Column(Integer, ForeignKey("quiz.quiz_id"))
     user_id = Column(Integer, ForeignKey("user.user_id"))
     status = Column(Enum("Ongoing", "Completed", "Pending", name="weekly_status"))
     attendance = Column(Float)
 
+    quiz = relationship(
+        "Quiz", back_populates="week", uselist=False, foreign_keys="[Quiz.week_id]"
+    )
+
     course = relationship("Course", back_populates="weeks")
     user = relationship("User", back_populates="weeks")
-    quiz = relationship("Quiz", back_populates="week")
     topics = relationship("Topic", back_populates="week")
 
 
@@ -117,9 +119,9 @@ class Quiz(Base):
     status = Column(Enum("Pending", "Completed", name="quiz_status"))
     score = Column(Float)
     user_id = Column(Integer, ForeignKey("user.user_id"))
-
-    user = relationship("User", back_populates="quizzes")
+    week_id = Column(Integer, ForeignKey("week.week_id"), unique=True)
     week = relationship("Week", back_populates="quiz")
+    user = relationship("User", back_populates="quizzes")
     questions = relationship("Questions", back_populates="quiz")
 
 
