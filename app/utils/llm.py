@@ -111,6 +111,8 @@ def getCourseRoadmap(semester, course):
 
             now if a user starts a semester, you need to give me the roadmap for all courses in the semester as a json file, also the weeks, exams in the courses, also the topics in each weeks. The rank attribute in week and exam helps to depict the order in which they will be ordered when combined, the three exams - Assessment I and Assessment II and Final End Semester, the Assessment II and End Semester should be at the final, the Assessment I should be in the middle of the weeks. The rank attribute helps to determine where to place an exam in between weeks, no two weeks or exams can have the same rank.
 
+            Make sure the spelling are followed just as i gave for exam types, course types, and all enum attributes
+            
         """  # Placeholder for B
 
     # C: Placeholder text (you can replace this later)

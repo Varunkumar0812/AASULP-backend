@@ -9,12 +9,12 @@
         "code": "HS5152",
         "type": "Theory"
       },
-      { 
-        "title": "Calculus", 
-        "credits": 4, 
-        "periods": 4, 
-        "code": "MA5151", 
-        "type": "Theory" 
+      {
+        "title": "Calculus",
+        "credits": 4,
+        "periods": 4,
+        "code": "MA5151",
+        "type": "Theory"
       },
       {
         "title": "Applied Physics",
@@ -253,9 +253,109 @@
         "code": "XC5552",
         "type": "Theory"
       },
-      { "title": "Program Elective I", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
-      { "title": "Program Elective II", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
-      { "title": "Audit Course", "credits": 0, "periods": 2, "code": "", "type": "Theory" },
+      {
+        "title": "Program Elective I",
+        "credits": 3,
+        "periods": 3,
+        "code": "",
+        "type": "Theory",
+        "choices": [
+          {
+            "title": ".NET Programming",
+            "code": "XT5071"
+          },
+          {
+            "title": "Linear Algebra",
+            "code": "MA5071"
+          },
+          {
+            "title": "Information Coding Techniques",
+            "code": "XT5072"
+          },
+          {
+            "title": "Human Computer Interface",
+            "code": "XT5073"
+          },
+          {
+            "title": "Open Source Systems",
+            "code": "XT5074"
+          }
+        ]
+      },
+      {
+        "title": "Program Elective II",
+        "credits": 3,
+        "periods": 3,
+        "code": "",
+        "type": "Theory",
+        "choices": [
+          {
+            "title": "High Speed Networks",
+            "code": "XC5071"
+          },
+          {
+            "title": "Unix Internals",
+            "code": "XC5072"
+          },
+          {
+            "title": "Database Tuning",
+            "code": "XT5075"
+          },
+          {
+            "title": "Software Project Management",
+            "code": "XT5076"
+          },
+          {
+            "title": "Personal Software Processes",
+            "code": "XT5077"
+          }
+        ]
+      },
+      {
+        "title": "Audit Course",
+        "credits": 0,
+        "periods": 2,
+        "code": "",
+        "type": "Theory",
+        "choices": [
+          {
+            "title": "English for Research Paper Writing",
+            "code": "AX5091"
+          },
+          {
+            "title": "Disaster Management",
+            "code": "AX5092"
+          },
+          {
+            "title": "Sanskrit for Technical Knowledge",
+            "code": "AX5093"
+          },
+          {
+            "title": "Value Education",
+            "code": "AX5094"
+          },
+          {
+            "title": "Constitution of India",
+            "code": "AX5095"
+          },
+          {
+            "title": "Pedagogy Studies",
+            "code": "AX5096"
+          },
+          {
+            "title": "Stress Management by Yoga",
+            "code": "AX5097"
+          },
+          {
+            "title": "Personality Development through Life Enlightenment Skills",
+            "code": "AX5098"
+          },
+          {
+            "title": "Unnat Bharath Abhiyan",
+            "code": "AX5099"
+          }
+        ]
+      },
       {
         "title": "Software Development Laboratory",
         "credits": 2,
@@ -296,7 +396,39 @@
         "code": "XC5652",
         "type": "Theory"
       },
-      { "title": "Program Elective III", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
+      {
+        "title": "Program Elective III",
+        "credits": 3,
+        "periods": 3,
+        "code": "",
+        "type": "Theory",
+        "choices": [
+          {
+            "title": "Visualization Techniques",
+            "code": "XT5078"
+          },
+          {
+            "title": "Digital Image Processing",
+            "code": "XT5079"
+          },
+          {
+            "title": "Network Programming",
+            "code": "XC5073"
+          },
+          {
+            "title": "Soft Computing",
+            "code": "XT5080"
+          },
+          {
+            "title": "Natural Language Processing",
+            "code": "XC5074"
+          },
+          {
+            "title": "Information Security",
+            "code": "XT5081"
+          }
+        ]
+      },
       {
         "title": "Compiler Design Laboratory",
         "credits": 2,
@@ -304,7 +436,13 @@
         "code": "XC5611",
         "type": "Lab"
       },
-      { "title": "Mini Project", "credits": 2, "periods": 4, "code": "XC5612", "type": "Lab" }
+      {
+        "title": "Mini Project",
+        "credits": 2,
+        "periods": 4,
+        "code": "XC5612",
+        "type": "Lab"
+      }
     ]
   },
   {
@@ -350,9 +488,101 @@
         "code": "GE5851",
         "type": "Theory"
       },
-      { "title": "Program Elective IV", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
-      { "title": "Open Elective I", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
-      { "title": "Audit Course II", "credits": 0, "periods": 2, "code": "", "type": "Theory" },
+      {
+        "title": "Program Elective IV",
+        "credits": 3,
+        "periods": 3,
+        "code": "",
+        "type": "Theory",
+        "choices": [
+          {
+            "title": "Adhoc and Sensor Networks",
+            "code": "XT5082"
+          },
+          {
+            "title": "Information Retrieval Techniques",
+            "code": "XT5083"
+          },
+          {
+            "title": "Semantic Web",
+            "code": "XT5084"
+          },
+          {
+            "title": "Performance Evaluation of Systems and Networks",
+            "code": "XT5085"
+          },
+          {
+            "title": "Bio Informatics",
+            "code": "XT5086"
+          },
+          {
+            "title": "Total Quality Management",
+            "code": "XT5087"
+          }
+        ]
+      },
+      {
+        "title": "Open Elective I",
+        "credits": 3,
+        "periods": 3,
+        "code": "",
+        "type": "Theory",
+        "choices": [
+          {
+            "title": "Graph Theory",
+            "code": "MA5891"
+          },
+          {
+            "title": "Statistical Methods",
+            "code": "MA5991"
+          }
+        ]
+      },
+      {
+        "title": "Audit Course II",
+        "credits": 0,
+        "periods": 2,
+        "code": "",
+        "type": "Theory",
+        "choices": [
+          {
+            "title": "English for Research Paper Writing",
+            "code": "AX5091"
+          },
+          {
+            "title": "Disaster Management",
+            "code": "AX5092"
+          },
+          {
+            "title": "Sanskrit for Technical Knowledge",
+            "code": "AX5093"
+          },
+          {
+            "title": "Value Education",
+            "code": "AX5094"
+          },
+          {
+            "title": "Constitution of India",
+            "code": "AX5095"
+          },
+          {
+            "title": "Pedagogy Studies",
+            "code": "AX5096"
+          },
+          {
+            "title": "Stress Management by Yoga",
+            "code": "AX5097"
+          },
+          {
+            "title": "Personality Development through Life Enlightenment Skills",
+            "code": "AX5098"
+          },
+          {
+            "title": "Unnat Bharath Abhiyan",
+            "code": "AX5099"
+          }
+        ]
+      },
       {
         "title": "Creative and Innovative Project",
         "credits": 2,
@@ -386,9 +616,85 @@
         "code": "XC5951",
         "type": "Lab+Theory"
       },
-      { "title": "Program Elective V", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
-      { "title": "Program Elective VI", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
-      { "title": "Open Elective II", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
+      {
+        "title": "Program Elective V",
+        "credits": 3,
+        "periods": 3,
+        "code": "",
+        "type": "Theory",
+        "choices": [
+          {
+            "title": "3G and 4G Wireless Networks",
+            "code": "XT5088"
+          },
+          {
+            "title": "Computational Linguistics",
+            "code": "XC5078"
+          },
+          {
+            "title": "Mobile and Persausive Computing",
+            "code": "XT5089"
+          },
+          {
+            "title": "Comptuer Vision",
+            "code": "XC5076"
+          },
+          {
+            "title": "Biometrics",
+            "code": "XC5077"
+          }
+        ]
+      },
+      {
+        "title": "Program Elective VI",
+        "credits": 3,
+        "periods": 3,
+        "code": "",
+        "type": "Theory",
+        "choices": [
+          {
+            "title": "Multimedia Information Storage and Retrieval",
+            "code": "XT5090"
+          },
+          {
+            "title": "Game Programming",
+            "code": "XT5091"
+          },
+          {
+            "title": "Augmented Reality and Virtual Reality",
+            "code": "XT5092"
+          },
+          {
+            "title": "Pattern Recognition",
+            "code": "XC5078"
+          },
+          {
+            "title": "Multimedia Tools and Techniques",
+            "code": "XT5093"
+          },
+          {
+            "title": "Software Testing and Quality Assurance",
+            "code": "XC5079"
+          }
+        ]
+      },
+      {
+        "title": "Open Elective II",
+        "credits": 3,
+        "periods": 3,
+        "code": "",
+        "type": "Theory",
+        "choices": [
+          {
+            "title": "Graph Theory",
+            "code": "MA5891"
+          },
+          {
+            "title": "Statistical Methods",
+            "code": "MA5991"
+          }
+        ]
+      },
       {
         "title": "Numerical Methods Laboratory",
         "credits": 2,

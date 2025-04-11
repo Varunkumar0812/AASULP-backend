@@ -15,10 +15,15 @@ from app.utils.llm import getCourseRoadmap
 router = APIRouter()
 
 
+# Get Course Statistics
 @router.get("/getCourseStatistics")
 def getCourseStatistics(payload: GetCourseStatistics, db: Session = Depends(get_db)):
     course = db.query(Course).filter(Course.course_id == payload.course_id).first()
 
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+
+    # Getting all exams and weeks for the course
     exams = (
         db.query(Exam)
         .filter(Exam.course_id == course.course_id)
@@ -37,10 +42,12 @@ def getCourseStatistics(payload: GetCourseStatistics, db: Session = Depends(get_
     next_week = next((week for week in weeks if week.status == "Pending"), None)
     course.next_topic = next_week  # Will be serialized as object or dict
 
+    # Quiz performance calculation
     total_quizzes = 0
     completed_quizzes = 0
     quiz_score = 0
 
+    # Course progress calculation
     total_topics = 0
     completed_topics = 0
 
@@ -71,6 +78,7 @@ def getCourseStatistics(payload: GetCourseStatistics, db: Session = Depends(get_
         completed_quizzes += sum(1 for quiz in quizzes if quiz.status == "Completed")
         quiz_score += sum(quiz.score for quiz in quizzes if quiz.status == "Completed")
 
+    # Setting all additional variables to course object
     course.quiz_performance = quiz_performance
     course.total_quizzes = total_quizzes
     course.completed_quizzes = completed_quizzes
@@ -98,6 +106,7 @@ def getAllCourses(payload: GetAllCourses, db: Session = Depends(get_db)):
         .all()
     )
 
+    # Setting next topic and progress for each course
     for course in courses:
         weeks = (
             db.query(Week)
@@ -158,10 +167,30 @@ def getAllSemesters(payload: GetAllSemesters, db: Session = Depends(get_db)):
         else:
             semester.gpa = None  # or 0.0 if preferred
 
+    with open(
+        "C:/Users/tvaru/Desktop/AI-ASULP/app/data/semester_course_details.json", "r"
+    ) as file:
+        next_semester_data = json.load(file)[len(semesters)]
+
+    print(next_semester_data)
+
+    electives = []
+    nxt_sem_title = next_semester_data["title"]
+
+    for course in next_semester_data["courses"]:
+        if course["code"] == "":
+            electives.append(
+                {
+                    "title": course["title"],
+                    "choices": course["choices"],
+                }
+            )
+
     nxt_semester = {
-        "title": "Semester " + str(len(semesters)),
+        "title": nxt_sem_title,
         "status": "Not Started",
         "gpa": 0.0,
+        "electives": electives,
     }
 
     semesters.append(nxt_semester)
@@ -206,6 +235,18 @@ def startSemester(
         "start_date": payload.start_date,
         "end_date": payload.end_date,
     }
+
+    # Filling the Elective Course Options from users input
+    for item in matched_semester.get("courses", []):
+
+        if item.get("code") == "":
+            option = next(
+                (x for x in payload.electives if x.title == item["title"]), None
+            )
+            if option:
+                item["code"] = option.code
+                item["title"] = option.option
+                item.pop("choices", None)  # ✅ remove choices if it exists
 
     # Step 4: Loop through each course and insert it
     for course_item in matched_semester.get("courses", []):
