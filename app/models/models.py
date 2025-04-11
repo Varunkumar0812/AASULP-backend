@@ -35,12 +35,14 @@ class Course(Base):
     __tablename__ = "course"
     course_id = Column(Integer, primary_key=True)
     title = Column(String)
+    code = Column(String)
     credit = Column(Integer)
     periods = Column(Integer)
     description = Column(String)
     start_date = Column(Date)
     end_date = Column(Date)
     status = Column(Enum("Active", "Completed", "Dropped", name="course_status"))
+    type = Column(Enum("Lab", "Theory", "Lab+Theory", name="course_type"))
     mark = Column(Float)
     attendance = Column(Float)
     user_id = Column(Integer, ForeignKey("user.user_id"))
@@ -86,7 +88,7 @@ class Week(Base):
     course_id = Column(Integer, ForeignKey("course.course_id"))
     quiz_id = Column(Integer, ForeignKey("quiz.quiz_id"))
     user_id = Column(Integer, ForeignKey("user.user_id"))
-    status = Column(Enum("Ongoing", "Completed", name="weekly_status"))
+    status = Column(Enum("Ongoing", "Completed", "Pending", name="weekly_status"))
     attendance = Column(Float)
 
     course = relationship("Course", back_populates="weeks")
@@ -101,7 +103,8 @@ class Topic(Base):
     title = Column(String)
     description = Column(String)
     resources = Column(String)
-    status = Column(Enum("Pending", "Completed", name="topic_status"))
+    status = Column(Enum("Pending", "Completed", "Ongoing", name="topic_status"))
+    user_id = Column(Integer, ForeignKey("user.user_id"))
 
     week_id = Column(Integer, ForeignKey("week.week_id"))
     week = relationship("Week", back_populates="topics")

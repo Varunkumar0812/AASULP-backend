@@ -27,7 +27,7 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
-""" @app.middleware("http")
+@app.middleware("http")
 async def verify_token(request: Request, call_next):
     print("Middleware: Verifying token...")
 
@@ -50,7 +50,7 @@ async def verify_token(request: Request, call_next):
     except InvalidTokenError:
         return JSONResponse(status_code=401, content={"detail": "Invalid token"})
 
-    return await call_next(request) """
+    return await call_next(request)
 
 
 @app.get("/")
@@ -58,7 +58,7 @@ def read_root():
     return {"message": "Welcome to FastAPI!"}
 
 
-app.include_router(mainRoutes.router, prefix="/api", tags=["StartSemester"])
+app.include_router(mainRoutes.router, prefix="/api/main", tags=["StartSemester"])
 app.include_router(topic.router, prefix="/api", tags=["Topic"])
 app.include_router(exam.router, prefix="/api", tags=["Exam"])
 app.include_router(week.router, prefix="/api", tags=["Week"])

@@ -6,38 +6,50 @@
         "title": "Communicative English",
         "credits": 3,
         "periods": 3,
-        "code": "HS5152"
+        "code": "HS5152",
+        "type": "Theory"
       },
-      { "title": "Calculus", "credits": 4, "periods": 4, "code": "MA5151" },
+      { 
+        "title": "Calculus", 
+        "credits": 4, 
+        "periods": 4, 
+        "code": "MA5151", 
+        "type": "Theory" 
+      },
       {
         "title": "Applied Physics",
         "credits": 4,
         "periods": 4,
-        "code": "PH5152"
+        "code": "PH5152",
+        "type": "Theory"
       },
       {
         "title": "Digital Systems",
         "credits": 4,
         "periods": 5,
-        "code": "XC5151"
+        "code": "XC5151",
+        "type": "Lab+Theory"
       },
       {
         "title": "Problem Solving and C Programming",
         "credits": 3,
         "periods": 3,
-        "code": "XC5152"
+        "code": "XC5152",
+        "type": "Theory"
       },
       {
         "title": "Communication Skill Laboratory",
         "credits": 2,
         "periods": 4,
-        "code": "HS5161"
+        "code": "HS5161",
+        "type": "Lab"
       },
       {
         "title": "C Programming Laboratoy",
         "credits": 2,
         "periods": 4,
-        "code": "XC5161"
+        "code": "XC5161",
+        "type": "Lab"
       }
     ]
   },
@@ -48,43 +60,50 @@
         "title": "Technical Communication",
         "credits": 3,
         "periods": 3,
-        "code": "HS5252"
+        "code": "HS5252",
+        "type": "Theory"
       },
       {
         "title": "Transform Techniques and Partil Differential Equations",
         "credits": 4,
         "periods": 4,
-        "code": "MA5251"
+        "code": "MA5251",
+        "type": "Theory"
       },
       {
         "title": "Chemistry of Materials",
         "credits": 4,
         "periods": 4,
-        "code": "CY5253"
+        "code": "CY5253",
+        "type": "Theory"
       },
       {
         "title": "Object Oriented Programming in C++",
         "credits": 4,
         "periods": 5,
-        "code": "XC5251"
+        "code": "XC5251",
+        "type": "Lab+Theory"
       },
       {
         "title": "Data Structures",
         "credits": 3,
         "periods": 3,
-        "code": "XC5252"
+        "code": "XC5252",
+        "type": "Theory"
       },
       {
         "title": "Computer Architecture",
         "credits": 3,
         "periods": 3,
-        "code": "XC5253"
+        "code": "XC5253",
+        "type": "Theory"
       },
       {
         "title": "Data Structures Laboratory",
         "credits": 2,
         "periods": 4,
-        "code": "XC5261"
+        "code": "XC5261",
+        "type": "Lab"
       }
     ]
   },
@@ -95,43 +114,50 @@
         "title": "Logic and Abstract Algebra",
         "credits": 4,
         "periods": 4,
-        "code": "MA5351"
+        "code": "MA5351",
+        "type": "Theory"
       },
       {
         "title": "Combinatorics and Graph Theory",
         "credits": 4,
         "periods": 4,
-        "code": "XC5351"
+        "code": "XC5351",
+        "type": "Theory"
       },
       {
         "title": "Microprocessor and Appplications",
         "credits": 4,
         "periods": 5,
-        "code": "XC5352"
+        "code": "XC5352",
+        "type": "Lab+Theory"
       },
       {
         "title": "Operating Systems",
         "credits": 3,
         "periods": 3,
-        "code": "XC5353"
+        "code": "XC5353",
+        "type": "Theory"
       },
       {
         "title": "Signals and Systems",
         "credits": 4,
         "periods": 4,
-        "code": "XC5354"
+        "code": "XC5354",
+        "type": "Theory"
       },
       {
         "title": "Operating Systems Laboratory",
         "credits": 2,
         "periods": 4,
-        "code": "XC5361"
+        "code": "XC5361",
+        "type": "Lab"
       },
       {
         "title": "Python Programming Laboratory",
         "credits": 2,
         "periods": 4,
-        "code": "XC5362"
+        "code": "XC5362",
+        "type": "Lab"
       }
     ]
   },
@@ -142,49 +168,57 @@
         "title": "Probability and Statistics",
         "credits": 4,
         "periods": 4,
-        "code": "MA5451"
+        "code": "MA5451",
+        "type": "Theory"
       },
       {
         "title": "Theory of Computation",
         "credits": 4,
         "periods": 4,
-        "code": "XC5451"
+        "code": "XC5451",
+        "type": "Theory"
       },
       {
         "title": "Database Management Systems",
         "credits": 3,
         "periods": 3,
-        "code": "XC5452"
+        "code": "XC5452",
+        "type": "Theory"
       },
       {
         "title": "Java and Internet Programming",
         "credits": 3,
         "periods": 3,
-        "code": "XC5453"
+        "code": "XC5453",
+        "type": "Theory"
       },
       {
         "title": "Computer Networks",
         "credits": 4,
         "periods": 5,
-        "code": "XC5454"
+        "code": "XC5454",
+        "type": "Lab+Theory"
       },
       {
         "title": "Java and Internet Programming Laboratory",
         "credits": 2,
         "periods": 4,
-        "code": "XC5461"
+        "code": "XC5461",
+        "type": "Lab"
       },
       {
         "title": "Database Management Systems Laboratory",
         "credits": 2,
         "periods": 4,
-        "code": "XC5461"
+        "code": "XC5461",
+        "type": "Lab"
       },
       {
         "title": "Computational Laboratory using R",
         "credits": 2,
         "periods": 4,
-        "code": "XC5461"
+        "code": "XC5461",
+        "type": "Lab"
       }
     ]
   },
@@ -195,39 +229,39 @@
         "title": "Cryptography and Data Security",
         "credits": 4,
         "periods": 4,
-        "code": "XC5501"
+        "code": "XC5501",
+        "type": "Theory"
       },
       {
         "title": "Software Engineering",
         "credits": 3,
         "periods": 3,
-        "code": "XC5551"
+        "code": "XC5551",
+        "type": "Theory"
       },
       {
         "title": "Data Warehousing and Mining",
         "credits": 4,
         "periods": 5,
-        "code": "XT5551"
+        "code": "XT5551",
+        "type": "Lab+Theory"
       },
       {
         "title": "Design and Analysis of Algorithms",
         "credits": 4,
         "periods": 4,
-        "code": "XC5552"
+        "code": "XC5552",
+        "type": "Theory"
       },
-      { "title": "Program Elective I", "credits": 3, "periods": 3, "code": "" },
-      {
-        "title": "Program Elective II",
-        "credits": 3,
-        "periods": 3,
-        "code": ""
-      },
-      { "title": "Audit Course", "credits": 0, "periods": 2, "code": "" },
+      { "title": "Program Elective I", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
+      { "title": "Program Elective II", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
+      { "title": "Audit Course", "credits": 0, "periods": 2, "code": "", "type": "Theory" },
       {
         "title": "Software Development Laboratory",
         "credits": 2,
         "periods": 4,
-        "code": "XC5561"
+        "code": "XC5561",
+        "type": "Lab"
       }
     ]
   },
@@ -238,39 +272,39 @@
         "title": "Operations Research",
         "credits": 4,
         "periods": 4,
-        "code": "XC5651"
+        "code": "XC5651",
+        "type": "Theory"
       },
       {
         "title": "Principles of Compiler Design",
         "credits": 3,
         "periods": 3,
-        "code": "XC5601"
+        "code": "XC5601",
+        "type": "Theory"
       },
       {
         "title": "Web Technology",
         "credits": 3,
         "periods": 3,
-        "code": "XT5651"
+        "code": "XT5651",
+        "type": "Theory"
       },
       {
         "title": "Artificial Intelligence",
         "credits": 4,
         "periods": 4,
-        "code": "XC5652"
+        "code": "XC5652",
+        "type": "Theory"
       },
-      {
-        "title": "Program Elective III",
-        "credits": 3,
-        "periods": 3,
-        "code": ""
-      },
+      { "title": "Program Elective III", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
       {
         "title": "Compiler Design Laboratory",
         "credits": 2,
         "periods": 4,
-        "code": "XC5611"
+        "code": "XC5611",
+        "type": "Lab"
       },
-      { "title": "Mini Project", "credits": 2, "periods": 4, "code": "XC5612" }
+      { "title": "Mini Project", "credits": 2, "periods": 4, "code": "XC5612", "type": "Lab" }
     ]
   },
   {
@@ -280,7 +314,8 @@
         "title": "Industrial Project",
         "credits": 16,
         "periods": 32,
-        "code": "XC5711"
+        "code": "XC5711",
+        "type": "Theory"
       }
     ]
   },
@@ -291,39 +326,39 @@
         "title": "Advanced Statistical Methods for Computing",
         "credits": 4,
         "periods": 4,
-        "code": "MA5851"
+        "code": "MA5851",
+        "type": "Theory"
       },
       {
         "title": "Big Data Analytics",
         "credits": 4,
         "periods": 5,
-        "code": "XT5851"
+        "code": "XT5851",
+        "type": "Lab+Theory"
       },
       {
         "title": "Distributed and Cloud Computing",
         "credits": 4,
         "periods": 5,
-        "code": "XT5852"
+        "code": "XT5852",
+        "type": "Lab+Theory"
       },
       {
         "title": "Environmental Science and Engineering",
         "credits": 3,
         "periods": 3,
-        "code": "GE5851"
+        "code": "GE5851",
+        "type": "Theory"
       },
-      {
-        "title": "Program Elective IV",
-        "credits": 3,
-        "periods": 3,
-        "code": ""
-      },
-      { "title": "Open Elective I", "credits": 3, "periods": 3, "code": "" },
-      { "title": "Audit Course II", "credits": 0, "periods": 2, "code": "" },
+      { "title": "Program Elective IV", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
+      { "title": "Open Elective I", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
+      { "title": "Audit Course II", "credits": 0, "periods": 2, "code": "", "type": "Theory" },
       {
         "title": "Creative and Innovative Project",
         "credits": 2,
         "periods": 4,
-        "code": "XC5811"
+        "code": "XC5811",
+        "type": "Lab"
       }
     ]
   },
@@ -334,39 +369,39 @@
         "title": "Numerical Methods",
         "credits": 4,
         "periods": 4,
-        "code": "MA5951"
+        "code": "MA5951",
+        "type": "Theory"
       },
       {
         "title": "Internet of Things",
         "credits": 3,
         "periods": 3,
-        "code": "XT5951"
+        "code": "XT5951",
+        "type": "Theory"
       },
       {
         "title": "Advanced Machine Learning Techniques",
         "credits": 4,
         "periods": 5,
-        "code": "XC5951"
+        "code": "XC5951",
+        "type": "Lab+Theory"
       },
-      { "title": "Program Elective V", "credits": 3, "periods": 3, "code": "" },
-      {
-        "title": "Program Elective VI",
-        "credits": 3,
-        "periods": 3,
-        "code": ""
-      },
-      { "title": "Open Elective II", "credits": 3, "periods": 3, "code": "" },
+      { "title": "Program Elective V", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
+      { "title": "Program Elective VI", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
+      { "title": "Open Elective II", "credits": 3, "periods": 3, "code": "", "type": "Theory" },
       {
         "title": "Numerical Methods Laboratory",
         "credits": 2,
         "periods": 4,
-        "code": "MA5961"
+        "code": "MA5961",
+        "type": "Lab"
       },
       {
         "title": "Internet of Things Laboratory",
         "credits": 2,
         "periods": 4,
-        "code": "XT5961"
+        "code": "XT5961",
+        "type": "Lab"
       }
     ]
   },
@@ -377,8 +412,9 @@
         "title": "Project Work",
         "credits": 18,
         "periods": 36,
-        "code": "XC5011"
+        "code": "XC5011",
+        "type": "Theory"
       }
     ]
   }
-]      
+]

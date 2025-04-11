@@ -9,8 +9,8 @@
         "Exams": [
             {
                 "id": null,
-                "title": "Assessment I",
-                "type": "Assesment I",
+                "title": "Assessment 1",
+                "type": "Assesment 1",
                 "rank": 5,
                 "start_date": "2025-09-02",
                 "end_date": "2025-09-06",
@@ -21,8 +21,8 @@
             },
             {
                 "id": null,
-                "title": "Assessment II",
-                "type": "Assesment II",
+                "title": "Assessment 2",
+                "type": "Assesment 2",
                 "rank": 10,
                 "start_date": "2025-10-21",
                 "end_date": "2025-10-24",
@@ -33,8 +33,8 @@
             },
             {
                 "id": null,
-                "title": "End Semester Exam",
-                "type": "End Semester Exam",
+                "title": "End Semester",
+                "type": "End Semester",
                 "rank": 15,
                 "start_date": "2025-11-10",
                 "end_date": "2025-11-15",
