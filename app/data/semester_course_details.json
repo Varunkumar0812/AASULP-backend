@@ -1,0 +1,384 @@
+[
+  {
+    "title": "Semester 1",
+    "courses": [
+      {
+        "title": "Communicative English",
+        "credits": 3,
+        "periods": 3,
+        "code": "HS5152"
+      },
+      { "title": "Calculus", "credits": 4, "periods": 4, "code": "MA5151" },
+      {
+        "title": "Applied Physics",
+        "credits": 4,
+        "periods": 4,
+        "code": "PH5152"
+      },
+      {
+        "title": "Digital Systems",
+        "credits": 4,
+        "periods": 5,
+        "code": "XC5151"
+      },
+      {
+        "title": "Problem Solving and C Programming",
+        "credits": 3,
+        "periods": 3,
+        "code": "XC5152"
+      },
+      {
+        "title": "Communication Skill Laboratory",
+        "credits": 2,
+        "periods": 4,
+        "code": "HS5161"
+      },
+      {
+        "title": "C Programming Laboratoy",
+        "credits": 2,
+        "periods": 4,
+        "code": "XC5161"
+      }
+    ]
+  },
+  {
+    "title": "Semester 2",
+    "courses": [
+      {
+        "title": "Technical Communication",
+        "credits": 3,
+        "periods": 3,
+        "code": "HS5252"
+      },
+      {
+        "title": "Transform Techniques and Partil Differential Equations",
+        "credits": 4,
+        "periods": 4,
+        "code": "MA5251"
+      },
+      {
+        "title": "Chemistry of Materials",
+        "credits": 4,
+        "periods": 4,
+        "code": "CY5253"
+      },
+      {
+        "title": "Object Oriented Programming in C++",
+        "credits": 4,
+        "periods": 5,
+        "code": "XC5251"
+      },
+      {
+        "title": "Data Structures",
+        "credits": 3,
+        "periods": 3,
+        "code": "XC5252"
+      },
+      {
+        "title": "Computer Architecture",
+        "credits": 3,
+        "periods": 3,
+        "code": "XC5253"
+      },
+      {
+        "title": "Data Structures Laboratory",
+        "credits": 2,
+        "periods": 4,
+        "code": "XC5261"
+      }
+    ]
+  },
+  {
+    "title": "Semester 3",
+    "courses": [
+      {
+        "title": "Logic and Abstract Algebra",
+        "credits": 4,
+        "periods": 4,
+        "code": "MA5351"
+      },
+      {
+        "title": "Combinatorics and Graph Theory",
+        "credits": 4,
+        "periods": 4,
+        "code": "XC5351"
+      },
+      {
+        "title": "Microprocessor and Appplications",
+        "credits": 4,
+        "periods": 5,
+        "code": "XC5352"
+      },
+      {
+        "title": "Operating Systems",
+        "credits": 3,
+        "periods": 3,
+        "code": "XC5353"
+      },
+      {
+        "title": "Signals and Systems",
+        "credits": 4,
+        "periods": 4,
+        "code": "XC5354"
+      },
+      {
+        "title": "Operating Systems Laboratory",
+        "credits": 2,
+        "periods": 4,
+        "code": "XC5361"
+      },
+      {
+        "title": "Python Programming Laboratory",
+        "credits": 2,
+        "periods": 4,
+        "code": "XC5362"
+      }
+    ]
+  },
+  {
+    "title": "Semester 4",
+    "courses": [
+      {
+        "title": "Probability and Statistics",
+        "credits": 4,
+        "periods": 4,
+        "code": "MA5451"
+      },
+      {
+        "title": "Theory of Computation",
+        "credits": 4,
+        "periods": 4,
+        "code": "XC5451"
+      },
+      {
+        "title": "Database Management Systems",
+        "credits": 3,
+        "periods": 3,
+        "code": "XC5452"
+      },
+      {
+        "title": "Java and Internet Programming",
+        "credits": 3,
+        "periods": 3,
+        "code": "XC5453"
+      },
+      {
+        "title": "Computer Networks",
+        "credits": 4,
+        "periods": 5,
+        "code": "XC5454"
+      },
+      {
+        "title": "Java and Internet Programming Laboratory",
+        "credits": 2,
+        "periods": 4,
+        "code": "XC5461"
+      },
+      {
+        "title": "Database Management Systems Laboratory",
+        "credits": 2,
+        "periods": 4,
+        "code": "XC5461"
+      },
+      {
+        "title": "Computational Laboratory using R",
+        "credits": 2,
+        "periods": 4,
+        "code": "XC5461"
+      }
+    ]
+  },
+  {
+    "title": "Semester 5",
+    "courses": [
+      {
+        "title": "Cryptography and Data Security",
+        "credits": 4,
+        "periods": 4,
+        "code": "XC5501"
+      },
+      {
+        "title": "Software Engineering",
+        "credits": 3,
+        "periods": 3,
+        "code": "XC5551"
+      },
+      {
+        "title": "Data Warehousing and Mining",
+        "credits": 4,
+        "periods": 5,
+        "code": "XT5551"
+      },
+      {
+        "title": "Design and Analysis of Algorithms",
+        "credits": 4,
+        "periods": 4,
+        "code": "XC5552"
+      },
+      { "title": "Program Elective I", "credits": 3, "periods": 3, "code": "" },
+      {
+        "title": "Program Elective II",
+        "credits": 3,
+        "periods": 3,
+        "code": ""
+      },
+      { "title": "Audit Course", "credits": 0, "periods": 2, "code": "" },
+      {
+        "title": "Software Development Laboratory",
+        "credits": 2,
+        "periods": 4,
+        "code": "XC5561"
+      }
+    ]
+  },
+  {
+    "title": "Semester 6",
+    "courses": [
+      {
+        "title": "Operations Research",
+        "credits": 4,
+        "periods": 4,
+        "code": "XC5651"
+      },
+      {
+        "title": "Principles of Compiler Design",
+        "credits": 3,
+        "periods": 3,
+        "code": "XC5601"
+      },
+      {
+        "title": "Web Technology",
+        "credits": 3,
+        "periods": 3,
+        "code": "XT5651"
+      },
+      {
+        "title": "Artificial Intelligence",
+        "credits": 4,
+        "periods": 4,
+        "code": "XC5652"
+      },
+      {
+        "title": "Program Elective III",
+        "credits": 3,
+        "periods": 3,
+        "code": ""
+      },
+      {
+        "title": "Compiler Design Laboratory",
+        "credits": 2,
+        "periods": 4,
+        "code": "XC5611"
+      },
+      { "title": "Mini Project", "credits": 2, "periods": 4, "code": "XC5612" }
+    ]
+  },
+  {
+    "title": "Semester 7",
+    "courses": [
+      {
+        "title": "Industrial Project",
+        "credits": 16,
+        "periods": 32,
+        "code": "XC5711"
+      }
+    ]
+  },
+  {
+    "title": "Semester 8",
+    "courses": [
+      {
+        "title": "Advanced Statistical Methods for Computing",
+        "credits": 4,
+        "periods": 4,
+        "code": "MA5851"
+      },
+      {
+        "title": "Big Data Analytics",
+        "credits": 4,
+        "periods": 5,
+        "code": "XT5851"
+      },
+      {
+        "title": "Distributed and Cloud Computing",
+        "credits": 4,
+        "periods": 5,
+        "code": "XT5852"
+      },
+      {
+        "title": "Environmental Science and Engineering",
+        "credits": 3,
+        "periods": 3,
+        "code": "GE5851"
+      },
+      {
+        "title": "Program Elective IV",
+        "credits": 3,
+        "periods": 3,
+        "code": ""
+      },
+      { "title": "Open Elective I", "credits": 3, "periods": 3, "code": "" },
+      { "title": "Audit Course II", "credits": 0, "periods": 2, "code": "" },
+      {
+        "title": "Creative and Innovative Project",
+        "credits": 2,
+        "periods": 4,
+        "code": "XC5811"
+      }
+    ]
+  },
+  {
+    "title": "Semester 9",
+    "courses": [
+      {
+        "title": "Numerical Methods",
+        "credits": 4,
+        "periods": 4,
+        "code": "MA5951"
+      },
+      {
+        "title": "Internet of Things",
+        "credits": 3,
+        "periods": 3,
+        "code": "XT5951"
+      },
+      {
+        "title": "Advanced Machine Learning Techniques",
+        "credits": 4,
+        "periods": 5,
+        "code": "XC5951"
+      },
+      { "title": "Program Elective V", "credits": 3, "periods": 3, "code": "" },
+      {
+        "title": "Program Elective VI",
+        "credits": 3,
+        "periods": 3,
+        "code": ""
+      },
+      { "title": "Open Elective II", "credits": 3, "periods": 3, "code": "" },
+      {
+        "title": "Numerical Methods Laboratory",
+        "credits": 2,
+        "periods": 4,
+        "code": "MA5961"
+      },
+      {
+        "title": "Internet of Things Laboratory",
+        "credits": 2,
+        "periods": 4,
+        "code": "XT5961"
+      }
+    ]
+  },
+  {
+    "title": "Semester 10",
+    "courses": [
+      {
+        "title": "Project Work",
+        "credits": 18,
+        "periods": 36,
+        "code": "XC5011"
+      }
+    ]
+  }
+]      
