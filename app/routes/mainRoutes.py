@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from sqlalchemy.orm import Session
 from app.dependencies import get_db
 from app.models.models import (
@@ -23,6 +23,178 @@ from app.utils.llm import getCourseRoadmap, getResourceForTopic, getQuizQuestion
 
 
 router = APIRouter()
+
+
+# Get Attendance Records
+@router.get("/attendanceRecords")
+def getAttendanceRecord(user_id: int = Query(...), db: Session = Depends(get_db)):
+    semesters = db.query(Semester).filter(Semester.user_id == user_id).all()
+
+    if not semesters:
+        raise HTTPException(status_code=404, detail="No semesters found")
+
+    # Sort semesters by number in title
+    semesters.sort(key=lambda x: int(x.title.split()[-1]))
+
+    for semester in semesters:
+        courses = (
+            db.query(Course).filter(Course.semester_id == semester.semester_id).all()
+        )
+
+        for course in courses:
+            # Determine total_classes_needed
+            if course.type == "Lab" and course.periods == 2:
+                total_classes_needed = 60
+            elif course.periods == 3:
+                total_classes_needed = 45
+            elif course.periods == 4:
+                total_classes_needed = 60
+            elif course.periods == 5:
+                total_classes_needed = 75
+            else:
+                total_classes_needed = 0  # fallback/default
+
+            # Calculate attended percentage
+            classes_missed = course.attendance or 0
+            classes_attended = max(total_classes_needed - classes_missed, 0)
+
+            percentage_classes_attended = (
+                (classes_attended / total_classes_needed) * 100
+                if total_classes_needed
+                else 0
+            )
+
+            # Set runtime attributes
+            course.total_classes_needed = total_classes_needed
+            course.percentage_classes_attended = round(percentage_classes_attended, 2)
+
+        semester.courses = courses  # attach courses
+
+    return {
+        "status": 200,
+        "message": "Attendance records fetched successfully",
+        "semesters": semesters,
+    }
+
+
+# Get Academics Records
+@router.get("/academicsRecords")
+def getAcademicsRecords(user_id: int = Query(...), db: Session = Depends(get_db)):
+    semesters = db.query(Semester).filter(Semester.user_id == user_id).all()
+
+    if not semesters:
+        raise HTTPException(status_code=404, detail="No semesters found")
+
+    # Sort semesters based on title (assuming title is like "Semester 1", "Semester 2", etc.)
+    semesters.sort(key=lambda x: int(x.title.split()[-1]))
+
+    cumulative_grade_points = 0
+    cumulative_credits = 0
+
+    for semester in semesters:
+        courses = (
+            db.query(Course).filter(Course.semester_id == semester.semester_id).all()
+        )
+        total_weighted_grade_points = 0
+        total_credits = 0
+
+        for course in courses:
+            exams = db.query(Exam).filter(Exam.course_id == course.course_id).all()
+
+            # Extract marks
+            a1 = next((e.mark for e in exams if e.type == "Assesment 1"), 0)
+            a2 = next((e.mark for e in exams if e.type == "Assesment 2"), 0)
+            end = next((e.mark for e in exams if e.type == "End Semester"), 0)
+
+            # Calculate total mark
+            total_mark = ((a1 + a2) * 0.4) + (end * 0.6)
+            course.mark = round(total_mark, 2)
+            db.commit()
+
+            # Convert to grade point
+            if total_mark >= 91:
+                grade_point = 10
+            elif total_mark >= 81:
+                grade_point = 9
+            elif total_mark >= 71:
+                grade_point = 8
+            elif total_mark >= 61:
+                grade_point = 7
+            elif total_mark >= 51:
+                grade_point = 6
+            else:
+                grade_point = 0  # U grade
+
+            # Weighted grade points
+            total_weighted_grade_points += course.credit * grade_point
+            total_credits += course.credit
+
+        # Calculate GPA for the semester
+        gpa = (
+            round(total_weighted_grade_points / total_credits, 2)
+            if total_credits
+            else 0
+        )
+        semester.gpa = gpa
+        db.commit()
+
+        # Update cumulative GPA calculation
+        cumulative_grade_points += total_weighted_grade_points
+        cumulative_credits += total_credits
+
+        # Calculate CGPA
+        cgpa = (
+            round(cumulative_grade_points / cumulative_credits, 2)
+            if cumulative_credits
+            else 0
+        )
+        semester.cgpa = cgpa
+
+        # Attach courses with mark to semester
+        semester.courses = courses
+
+    return {
+        "status": 200,
+        "message": "Academic records fetched successfully",
+        "semesters": semesters,
+    }
+
+
+# Submit Quiz Answers
+@router.put("/submitQuiz")
+def submitQuiz(
+    answers: list[dict] = Body(...),
+    quiz_id: int = Query(...),
+    db: Session = Depends(get_db),
+):
+    correct_count = 0
+
+    for item in answers:
+        question_id = item.get("question_id")
+        chosen_ans = item.get("chosen_answer")
+
+        if question_id is None or chosen_ans is None:
+            continue  # skip incomplete entries
+
+        question = (
+            db.query(Questions).filter(Questions.question_id == question_id).first()
+        )
+        if question:
+            if int(question.correct_answer) == chosen_ans:
+                correct_count += 1
+
+    # Update the score in the Quiz table
+    quiz = db.query(Quiz).filter(Quiz.quiz_id == quiz_id).first()
+    if quiz:
+        quiz.score = correct_count
+
+    db.commit()
+
+    return {
+        "status": 200,
+        "message": "Answers submitted successfully",
+        "score": correct_count,
+    }
 
 
 # Get Quiz Questions
