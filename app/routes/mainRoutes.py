@@ -1,7 +1,17 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.dependencies import get_db
-from app.models.models import Course, Semester, Exam, Week, Topic, Quiz, Book, Resource
+from app.models.models import (
+    Course,
+    Semester,
+    Exam,
+    Week,
+    Topic,
+    Quiz,
+    Book,
+    Resource,
+    Questions,
+)
 from app.schemas.startSemester import (
     StartSemesterData,
     GetAllSemesters,
@@ -9,10 +19,67 @@ from app.schemas.startSemester import (
     GetCourseStatistics,
 )
 import json
-from app.utils.llm import getCourseRoadmap, getResourceForTopic
+from app.utils.llm import getCourseRoadmap, getResourceForTopic, getQuizQuestions
 
 
 router = APIRouter()
+
+
+# Get Quiz Questions
+@router.post("/startQuiz")
+def startQuiz(quiz_id: int = Query(...), db: Session = Depends(get_db)):
+    quiz = db.query(Quiz).filter(Quiz.quiz_id == quiz_id).first()
+    if not quiz:
+        raise HTTPException(status_code=404, detail="Quiz not found")
+
+    # Step 1: Get the associated week
+    week = db.query(Week).filter(Week.week_id == quiz.week_id).first()
+    if not week:
+        raise HTTPException(status_code=404, detail="Associated week not found")
+
+    # Step 2: Get all topics for that week
+    topics = db.query(Topic).filter(Topic.week_id == week.week_id).all()
+    topic_list = [{"title": t.title, "description": t.description} for t in topics]
+
+    # Step 3: Check if questions already exist for this quiz
+    existing_questions = db.query(Questions).filter(Questions.quiz_id == quiz_id).all()
+
+    if existing_questions:
+        return {
+            "status": 200,
+            "quiz": quiz,
+            "topics": topic_list,
+            "message": "Quiz questions already exist",
+            "questions": existing_questions,
+        }
+
+    # Step 4: Generate questions
+    question_data = getQuizQuestions(topic_list)
+
+    # Step 5: Insert new questions into the database
+    created_questions = []
+    for q in question_data:
+        question = Questions(
+            quiz_id=quiz.quiz_id,
+            user_id=quiz.user_id,
+            title=q["title"],
+            options=q["options"],
+            correct_answer=q["correct_answer"],
+            chosen_answer=None,
+        )
+        db.add(question)
+        db.flush()  # Ensures question_id is available
+        created_questions.append(question)
+
+    db.commit()
+
+    return {
+        "status": 200,
+        "quiz": quiz,
+        "topics": topic_list,
+        "message": "Quiz started and questions generated",
+        "questions": created_questions,
+    }
 
 
 # Get or Create Topic Resources and Books
@@ -74,7 +141,6 @@ def getTopicResource(topic_id: int = Query(...), db: Session = Depends(get_db)):
     }
 
 
-# Get all Topics and Exams for a Week
 @router.get("/getAllTopics")
 def getAllTopics(course_id: int = Query(...), db: Session = Depends(get_db)):
     course = db.query(Course).filter(Course.course_id == course_id).first()
@@ -114,6 +180,11 @@ def getAllTopics(course_id: int = Query(...), db: Session = Depends(get_db)):
             # Add topics of the week
             for topic in topics:
                 result.append({"type": "topic", "topic": topic})
+
+            # ✅ Add quiz of the week
+            quiz = db.query(Quiz).filter(Quiz.week_id == week.week_id).first()
+            if quiz:
+                result.append({"type": "quiz", "quiz": quiz})
 
         elif item["type"] == "exam":
             # Add the exam directly
@@ -395,6 +466,19 @@ def startSemester(
             db.commit()
             db.refresh(week)
 
+            # Step 6.1: Create Quiz for the week
+            quiz = Quiz(
+                title=f"{week.title} - Quiz",
+                status="Pending",
+                score=0.0,
+                user_id=payload.user_id,
+                week_id=week.week_id,
+            )
+            db.add(quiz)
+            db.commit()
+            db.refresh(quiz)
+
+            # Step 6.2: Create Topics under this week
             for topic_data in week_data.get("Topics", []):
                 topic = Topic(
                     title=topic_data.get("title"),

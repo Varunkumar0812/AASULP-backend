@@ -177,6 +177,41 @@ def getResourceForTopic(topic):
         return {}
 
 
+def getQuizQuestions(topics):
+    A = """
+        Question :
+            title
+            options
+            correct_answer
+            chosen_answer
+
+        I have to design quiz in my university student AI partner application, given a set of topics, i want you to provide exactly 20 MCQ questions for that quiz, the resultant should be a json data with the 20 questions. For the attribute 'option' store the four options of MCQ questions as a string separated by a delimiter "<I>", And the correct answer should be the number of the option (1/2/3/4). Just give me a json data, no other extra data should be present.
+
+        Here are the topics
+
+        """
+
+    B = ""
+    for topic in topics:
+        B += f"Topic : {topic['title']}\nDescription : {topic['description']}\n\n"
+
+    B = B.strip()  # Remove the trailing newline
+
+    prompt = A + B
+
+    # Call Gemini
+    response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+
+    try:
+        return json.loads(
+            response.text.strip().removeprefix("```json").removesuffix("```").strip()
+        )
+    except json.JSONDecodeError:
+        print("Could not parse JSON. Raw response:")
+        print(response.text)
+        return {}
+
+
 # Example usage:
 # roadmap = getCourseRoadmap()
 # print(roadmap)
