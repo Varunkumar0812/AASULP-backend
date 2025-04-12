@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware import Middleware
+from fastapi.middleware.cors import CORSMiddleware
 from app.routes import example
 from app.database import engine, Base
 from app.routes import user
@@ -27,14 +28,33 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 
+origins = [
+    "http://localhost:5173",  # Vite dev server
+    "http://127.0.0.1:5173",  # optional, just in case
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,  # or ["*"] for all origins (not safe for production)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 @app.middleware("http")
 async def verify_token(request: Request, call_next):
     print("Middleware: Verifying token...")
+
+    # Allow unauthenticated access for OPTIONS requests (CORS preflight)
+    if request.method == "OPTIONS":
+        return await call_next(request)
 
     if request.url.path in ["/docs", "/openapi.json", "/auth/login"]:
         return await call_next(request)
 
     auth_header = request.headers.get("Authorization")
+
     if not auth_header or not auth_header.startswith("Bearer "):
         return JSONResponse(status_code=401, content={"detail": "Unauthorized"})
 

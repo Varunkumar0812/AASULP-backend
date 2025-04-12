@@ -10,17 +10,23 @@ router = APIRouter()
 
 
 class LoginRequest(BaseModel):
-    email: str
+    user_id: str
     password: str
 
 
 @router.post("/login")
 def login(req: LoginRequest, db: Session = Depends(get_db)):
-    user = db.query(User).filter(User.email == req.email).first()
+    user = db.query(User).filter(User.user_id == req.user_id).first()
     if not user or not verify_password(req.password, user.password):
         raise HTTPException(status_code=401, detail="Invalid email or password")
 
     token = create_access_token(
         data={"sub": str(user.user_id)}, expires_delta=timedelta(minutes=60)
     )
-    return {"access_token": token, "token_type": "bearer"}
+
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "user_id": user.user_id,
+        "user_name": user.first_name + " " + user.last_name,
+    }

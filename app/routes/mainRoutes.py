@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.dependencies import get_db
 from app.models.models import Course, Semester, Exam, Week, Topic, Quiz
@@ -15,10 +15,9 @@ from app.utils.llm import getCourseRoadmap
 router = APIRouter()
 
 
-# Get Course Statistics
 @router.get("/getCourseStatistics")
-def getCourseStatistics(payload: GetCourseStatistics, db: Session = Depends(get_db)):
-    course = db.query(Course).filter(Course.course_id == payload.course_id).first()
+def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_db)):
+    course = db.query(Course).filter(Course.course_id == course_id).first()
 
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
@@ -40,7 +39,7 @@ def getCourseStatistics(payload: GetCourseStatistics, db: Session = Depends(get_
 
     # Set next_topic
     next_week = next((week for week in weeks if week.status == "Pending"), None)
-    course.next_topic = next_week  # Will be serialized as object or dict
+    course.next_topic = next_week
 
     # Quiz performance calculation
     total_quizzes = 0
@@ -50,6 +49,8 @@ def getCourseStatistics(payload: GetCourseStatistics, db: Session = Depends(get_
     # Course progress calculation
     total_topics = 0
     completed_topics = 0
+
+    quiz_performance = {}
 
     for week in weeks:
         topics = (
@@ -62,8 +63,6 @@ def getCourseStatistics(payload: GetCourseStatistics, db: Session = Depends(get_
 
         week.quizzes = quizzes
         week.topics = topics
-
-        quiz_performance = {}
 
         for quiz in quizzes:
             quiz_performance[quiz.quiz_id] = {
@@ -78,7 +77,7 @@ def getCourseStatistics(payload: GetCourseStatistics, db: Session = Depends(get_
         completed_quizzes += sum(1 for quiz in quizzes if quiz.status == "Completed")
         quiz_score += sum(quiz.score for quiz in quizzes if quiz.status == "Completed")
 
-    # Setting all additional variables to course object
+    # Attach calculated data to the course
     course.quiz_performance = quiz_performance
     course.total_quizzes = total_quizzes
     course.completed_quizzes = completed_quizzes
@@ -96,12 +95,16 @@ def getCourseStatistics(payload: GetCourseStatistics, db: Session = Depends(get_
 
 
 @router.get("/getAllCourses")
-def getAllCourses(payload: GetAllCourses, db: Session = Depends(get_db)):
+def getAllCourses(
+    user_id: int = Query(...),
+    semester_id: int = Query(...),
+    db: Session = Depends(get_db),
+):
     courses = (
         db.query(Course)
         .filter(
-            Course.user_id == payload.user_id,
-            Course.semester_id == payload.semester_id,
+            Course.user_id == user_id,
+            Course.semester_id == semester_id,
         )
         .all()
     )
@@ -117,7 +120,7 @@ def getAllCourses(payload: GetAllCourses, db: Session = Depends(get_db)):
 
         # Set next_topic
         next_week = next((week for week in weeks if week.status == "Pending"), None)
-        course.next_topic = next_week  # Will be serialized as object or dict
+        course.next_topic = next_week
 
         # Progress calculation
         total_weeks = len(weeks)
@@ -132,15 +135,14 @@ def getAllCourses(payload: GetAllCourses, db: Session = Depends(get_db)):
 
 # Get All Semesters
 @router.get("/getAllSemesters")
-def getAllSemesters(payload: GetAllSemesters, db: Session = Depends(get_db)):
-    semesters = db.query(Semester).filter(Semester.user_id == payload.user_id).all()
+def getAllSemesters(user_id: str = Query(...), db: Session = Depends(get_db)):
+    semesters = db.query(Semester).filter(Semester.user_id == user_id).all()
 
     for semester in semesters:
         courses = (
             db.query(Course)
             .filter(
-                Course.semester_id == semester.semester_id
-                and Course.user_id == payload.user_id
+                Course.semester_id == semester.semester_id, Course.user_id == user_id
             )
             .all()
         )
@@ -150,55 +152,42 @@ def getAllSemesters(payload: GetAllSemesters, db: Session = Depends(get_db)):
         is_ongoing = False
 
         for course in courses:
-            total_credits += course.credit or 0  # to handle None credits
-
+            total_credits += course.credit or 0
             if course.status == "Active":
                 is_ongoing = True
-
-            if course.mark is not None:  # to handle None marks
+            if course.mark is not None:
                 weighted_score += course.credit * course.mark
 
-        # Set calculated attributes
+        semester.course_count = len(courses)
         semester.credits = total_credits
         semester.status = "OnGoing" if is_ongoing else "Completed"
-
-        if total_credits > 0:
-            semester.gpa = round(weighted_score / total_credits, 2)
-        else:
-            semester.gpa = None  # or 0.0 if preferred
+        semester.gpa = (
+            round(weighted_score / total_credits, 2) if total_credits > 0 else None
+        )
 
     with open(
         "C:/Users/tvaru/Desktop/AI-ASULP/app/data/semester_course_details.json", "r"
     ) as file:
         next_semester_data = json.load(file)[len(semesters)]
 
-    print(next_semester_data)
-
-    electives = []
-    nxt_sem_title = next_semester_data["title"]
-
-    for course in next_semester_data["courses"]:
-        if course["code"] == "":
-            electives.append(
-                {
-                    "title": course["title"],
-                    "choices": course["choices"],
-                }
-            )
+    electives = [
+        {"title": course["title"], "choices": course["choices"]}
+        for course in next_semester_data["courses"]
+        if course["code"] == ""
+    ]
 
     nxt_semester = {
-        "title": nxt_sem_title,
+        "title": next_semester_data["title"],
         "status": "Not Started",
         "gpa": 0.0,
         "electives": electives,
     }
 
     semesters.append(nxt_semester)
-
     return semesters
 
 
-# Initiate a Semester
+# Initiate A Semester
 @router.post("/startSemester")
 def startSemester(
     payload: StartSemesterData,
