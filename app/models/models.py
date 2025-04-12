@@ -62,6 +62,20 @@ class Book(Base):
     author = Column(String)
     edition = Column(String)
 
+    topic_id = Column(Integer, ForeignKey("topic.topic_id"))
+    topic = relationship("Topic", back_populates="books")
+
+
+class Resource(Base):
+    __tablename__ = "resource"
+    resource_id = Column(Integer, primary_key=True)
+    title = Column(String)
+    description = Column(String)
+    website_link = Column(String)
+
+    topic_id = Column(Integer, ForeignKey("topic.topic_id"))
+    topic = relationship("Topic", back_populates="resources")
+
 
 class Exam(Base):
     __tablename__ = "exam"
@@ -104,12 +118,15 @@ class Topic(Base):
     topic_id = Column(Integer, primary_key=True)
     title = Column(String)
     description = Column(String)
-    resources = Column(String)
     status = Column(Enum("Pending", "Completed", "Ongoing", name="topic_status"))
     user_id = Column(Integer, ForeignKey("user.user_id"))
 
     week_id = Column(Integer, ForeignKey("week.week_id"))
     week = relationship("Week", back_populates="topics")
+
+    # New relationships
+    books = relationship("Book", back_populates="topic")
+    resources = relationship("Resource", back_populates="topic")
 
 
 class Quiz(Base):

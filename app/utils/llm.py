@@ -136,6 +136,47 @@ def getCourseRoadmap(semester, course):
         return {}
 
 
+def getResourceForTopic(topic):
+    A = """
+                Book :
+                title
+                description
+                author
+                edition
+
+                Resource :
+                title
+                description
+                website_link
+
+                i have two tables which will store the resources and books to refer to study about a topic for a university student. Given a topic, provide me the resources and books for the student to refer, the description of book table denotes which chapter in the book i need to refer. Also i need a two paragraph summary of the topic. Give the final resultant data in the form a json, only json is what is need :
+
+                {
+                topic : "",
+                description : "", 
+                books : [],
+                resources : []
+                }   
+
+            """
+
+    B = f"""just now, give me json for the topic \"{topic.title + " - " + topic.description}\""""
+
+    prompt = A + B
+
+    # Call Gemini
+    response = client.models.generate_content(model="gemini-2.0-flash", contents=prompt)
+
+    try:
+        return json.loads(
+            response.text.strip().removeprefix("```json").removesuffix("```").strip()
+        )
+    except json.JSONDecodeError:
+        print("Could not parse JSON. Raw response:")
+        print(response.text)
+        return {}
+
+
 # Example usage:
 # roadmap = getCourseRoadmap()
 # print(roadmap)

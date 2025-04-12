@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from app.dependencies import get_db
-from app.models.models import Course, Semester, Exam, Week, Topic, Quiz
+from app.models.models import Course, Semester, Exam, Week, Topic, Quiz, Book, Resource
 from app.schemas.startSemester import (
     StartSemesterData,
     GetAllSemesters,
@@ -9,18 +9,69 @@ from app.schemas.startSemester import (
     GetCourseStatistics,
 )
 import json
-from app.utils.llm import getCourseRoadmap
+from app.utils.llm import getCourseRoadmap, getResourceForTopic
 
 
 router = APIRouter()
 
 
+# Get or Create Topic Resources and Books
 @router.post("/getTopicResource")
-def getTopicResource(topic_id=Query(...), db: Session = Depends(get_db)):
+def getTopicResource(topic_id: int = Query(...), db: Session = Depends(get_db)):
     topic = db.query(Topic).filter(Topic.topic_id == topic_id).first()
 
     if not topic:
         raise HTTPException(status_code=404, detail="Topic not found")
+
+    books = db.query(Book).filter(Book.topic_id == topic_id).all()
+    resources = db.query(Resource).filter(Resource.topic_id == topic_id).all()
+
+    # If no existing books or resources, populate from external data
+    if not books and not resources:
+        data = getResourceForTopic(topic)
+        print(data)
+
+        # Update topic description
+        topic.description = data.get("description")
+        db.commit()
+        db.refresh(topic)
+
+        # Insert books
+        for book in data.get("books", []):
+            new_book = Book(
+                title=book["title"],
+                author=book["author"],
+                edition=book["edition"],
+                topic_id=topic_id,
+                description=book.get(
+                    "description"
+                ),  # Optional if you’ve added this column
+            )
+            db.add(new_book)
+
+        # Insert resources
+        for res in data.get("resources", []):
+            new_res = Resource(
+                title=res["title"],
+                description=res["description"],
+                website_link=res["website_link"],
+                topic_id=topic_id,
+            )
+            db.add(new_res)
+
+        db.commit()
+
+        # Re-fetch updated values
+        books = db.query(Book).filter(Book.topic_id == topic_id).all()
+        resources = db.query(Resource).filter(Resource.topic_id == topic_id).all()
+
+    topic = db.query(Topic).filter(Topic.topic_id == topic_id).first()
+
+    return {
+        "topic": topic,
+        "books": books,
+        "resources": resources,
+    }
 
 
 # Get all Topics and Exams for a Week
