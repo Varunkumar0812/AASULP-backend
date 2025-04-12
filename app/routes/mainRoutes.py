@@ -25,6 +25,53 @@ from app.utils.llm import getCourseRoadmap, getResourceForTopic, getQuizQuestion
 router = APIRouter()
 
 
+@router.put("/updateAttendance")
+def updateAttendance(
+    course_id: int = Query(...),
+    attendance: int = Body(...),
+    db: Session = Depends(get_db),
+):
+    # Fetch the course
+    course = db.query(Course).filter(Course.course_id == course_id).first()
+
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+
+    # Update attendance value
+    course.attendance = attendance
+
+    db.commit()
+
+    return {
+        "status": 200,
+        "message": "Attendance updated successfully",
+        "course_id": course_id,
+        "updated_attendance": attendance,
+    }
+
+
+@router.put("/updateMarks")
+def updateMarks(
+    exam_id: int = Query(...), mark: int = Body(...), db: Session = Depends(get_db)
+):
+    # Fetch the exam by exam_id
+    exam = db.query(Exam).filter(Exam.exam_id == exam_id).first()
+
+    if not exam:
+        raise HTTPException(status_code=404, detail="Exam not found")
+
+    # Update the mark
+    exam.mark = mark
+    db.commit()
+
+    return {
+        "status": 200,
+        "message": "Mark updated successfully",
+        "exam_id": exam_id,
+        "updated_mark": mark,
+    }
+
+
 # Get Attendance Records
 @router.get("/attendanceRecords")
 def getAttendanceRecord(user_id: int = Query(...), db: Session = Depends(get_db)):
@@ -511,9 +558,6 @@ def getAllSemesters(user_id: str = Query(...), db: Session = Depends(get_db)):
         semester.course_count = len(courses)
         semester.credits = total_credits
         semester.status = "OnGoing" if is_ongoing else "Completed"
-        semester.gpa = (
-            round(weighted_score / total_credits, 2) if total_credits > 0 else None
-        )
 
     with open(
         "C:/Users/tvaru/Desktop/AI-ASULP/app/data/semester_course_details.json", "r"
