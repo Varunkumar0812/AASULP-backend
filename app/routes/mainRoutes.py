@@ -15,6 +15,62 @@ from app.utils.llm import getCourseRoadmap
 router = APIRouter()
 
 
+@router.post("/getTopicResource")
+def getTopicResource(topic_id=Query(...), db: Session = Depends(get_db)):
+    topic = db.query(Topic).filter(Topic.topic_id == topic_id).first()
+
+    if not topic:
+        raise HTTPException(status_code=404, detail="Topic not found")
+
+
+# Get all Topics and Exams for a Week
+@router.get("/getAllTopics")
+def getAllTopics(course_id: int = Query(...), db: Session = Depends(get_db)):
+    course = db.query(Course).filter(Course.course_id == course_id).first()
+
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+
+    # Get and sort weeks and exams
+    weeks = db.query(Week).filter(Week.course_id == course.course_id).all()
+    exams = db.query(Exam).filter(Exam.course_id == course.course_id).all()
+
+    # Annotate with type for sorting and identification
+    combined = [{"type": "week", "data": week, "rank": week.rank} for week in weeks] + [
+        {"type": "exam", "data": exam, "rank": exam.rank} for exam in exams
+    ]
+
+    # Sort based on rank
+    combined.sort(key=lambda x: x["rank"])
+
+    result = []
+
+    for item in combined:
+        if item["type"] == "week":
+            week = item["data"]
+
+            # Get topics for the week
+            topics = (
+                db.query(Topic)
+                .filter(Topic.week_id == week.week_id)
+                .order_by(Topic.title)
+                .all()
+            )
+
+            # Add the week itself
+            result.append({"type": "week", "week": week})
+
+            # Add topics of the week
+            for topic in topics:
+                result.append({"type": "topic", "topic": topic})
+
+        elif item["type"] == "exam":
+            # Add the exam directly
+            result.append({"type": "exam", "exam": item["data"]})
+
+    return result
+
+
 @router.get("/getCourseStatistics")
 def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_db)):
     course = db.query(Course).filter(Course.course_id == course_id).first()
