@@ -244,7 +244,6 @@ def submitQuiz(
     }
 
 
-# Get Quiz Questions
 @router.post("/startQuiz")
 def startQuiz(quiz_id: int = Query(...), db: Session = Depends(get_db)):
     quiz = db.query(Quiz).filter(Quiz.quiz_id == quiz_id).first()
@@ -262,7 +261,6 @@ def startQuiz(quiz_id: int = Query(...), db: Session = Depends(get_db)):
 
     # Step 3: Check if questions already exist for this quiz
     existing_questions = db.query(Questions).filter(Questions.quiz_id == quiz_id).all()
-
     if existing_questions:
         return {
             "status": 200,
@@ -273,28 +271,39 @@ def startQuiz(quiz_id: int = Query(...), db: Session = Depends(get_db)):
         }
 
     # Step 4: Generate questions
-    question_data = getQuizQuestions(topic_list)
+    question_data = getQuizQuestions(
+        topic_list
+    )  # Make sure this is a list of dictionaries
 
     # Step 5: Insert new questions into the database
-    created_questions = []
     for q in question_data:
-        question = Questions(
-            quiz_id=quiz.quiz_id,
-            user_id=quiz.user_id,
-            title=q["title"],
-            options=q["options"],
-            correct_answer=q["correct_answer"],
-            chosen_answer=None,
-        )
-        db.add(question)
-        db.flush()  # Ensures question_id is available
-        created_questions.append(question)
+        if (
+            isinstance(q, dict)
+            and "title" in q
+            and "options" in q
+            and "correct_answer" in q
+        ):
+            question = Questions(
+                quiz_id=quiz.quiz_id,
+                user_id=quiz.user_id,
+                title=q["title"],
+                options=q["options"],
+                correct_answer=q["correct_answer"],
+                chosen_answer=None,
+            )
+            db.add(question)
+        else:
+            print(f"Invalid question data: {q}")  # Log invalid data
 
     db.commit()
 
+    # ✅ Step 6: Refetch the quiz and questions from DB
+    refreshed_quiz = db.query(Quiz).filter(Quiz.quiz_id == quiz_id).first()
+    created_questions = db.query(Questions).filter(Questions.quiz_id == quiz_id).all()
+
     return {
         "status": 200,
-        "quiz": quiz,
+        "quiz": refreshed_quiz,
         "topics": topic_list,
         "message": "Quiz started and questions generated",
         "questions": created_questions,

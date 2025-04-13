@@ -185,7 +185,7 @@ def getQuizQuestions(topics):
             correct_answer
             chosen_answer
 
-        I have to design quiz in my university student AI partner application, given a set of topics, i want you to provide exactly 20 MCQ questions for that quiz, the resultant should be a json data with the 20 questions. For the attribute 'option' store the four options of MCQ questions as a string separated by a delimiter "<I>", And the correct answer should be the number of the option (1/2/3/4). Just give me a json data, no other extra data should be present.
+        I have to design quiz in my university student AI partner application, given a set of topics, i want you to provide exactly 20 MCQ questions for that quiz, the resultant should be a json data with the 20 questions. For the attribute 'option' store the four options of MCQ questions as a string separated by a delimiter "<I>", And the correct answer should be the number of the option (1/2/3/4). Just give me a json data, no other extra data should be present. The data must be a list json of objects, nothing other
 
         Here are the topics
 

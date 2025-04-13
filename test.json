@@ -1,60 +1,43 @@
-{'title': 'Semester 5', 'courses': [
-    {'title': 'Cryptography and Data Security', 'credits': 4, 'periods': 4, 'code': 'XC5501', 'type': 'Theory'
+{'quiz': [
+    {'title': 'Which of the following is the most important element of active listening?', 'options': "Hearing every word<I>Understanding the speaker's perspective<I>Waiting for your turn to speak<I>Formulating your response while listening", 'correct_answer': '2', 'chosen_answer': None
     },
-    {'title': 'Software Engineering', 'credits': 3, 'periods': 3, 'code': 'XC5551', 'type': 'Theory'
+    {'title': "What does 'attending' refer to in the context of active listening?", 'options': 'Ignoring distractions and focusing on the speaker<I>Only hearing the words being spoken<I>Mentally rehearsing what you want to say<I>Multitasking while the speaker is talking', 'correct_answer': '1', 'chosen_answer': None
     },
-    {'title': 'Data Warehousing and Mining', 'credits': 4, 'periods': 5, 'code': 'XT5551', 'type': 'Lab+Theory'
+    {'title': 'Using nonverbal cues, such as nodding, is an example of:', 'options': "Interrupting the speaker<I>Showing disrespect<I>Demonstrating that you're paying attention<I>Dominating the conversation", 'correct_answer': '3', 'chosen_answer': None
     },
-    {'title': 'Design and Analysis of Algorithms', 'credits': 4, 'periods': 4, 'code': 'XC5552', 'type': 'Theory'
+    {'title': 'What is paraphrasing in active listening?', 'options': "Repeating the speaker's exact words<I>Summarizing the speaker's message in your own words<I>Changing the speaker's message to fit your understanding<I>Ignoring the speaker's message", 'correct_answer': '2', 'chosen_answer': None
     },
-    {'title': 'Open Source Systems', 'credits': 3, 'periods': 3, 'code': 'XT5074', 'type': 'Theory', 'choices': [
-        {'title': '.NET Programming', 'code': 'XT5071'
-        },
-        {'title': 'Linear Algebra', 'code': 'MA5071'
-        },
-        {'title': 'Information Coding Techniques', 'code': 'XT5072'
-        },
-        {'title': 'Human Computer Interface', 'code': 'XT5073'
-        },
-        {'title': 'Open Source Systems', 'code': 'XT5074'
-        }
-      ]
+    {'title': 'Why is asking clarifying questions important in active listening?', 'options': "To interrupt the speaker<I>To show that you're smarter than the speaker<I>To ensure you understand the speaker's message accurately<I>To change the subject", 'correct_answer': '3', 'chosen_answer': None
     },
-    {'title': 'Open Source Systems', 'credits': 3, 'periods': 3, 'code': 'XT5074', 'type': 'Theory', 'choices': [
-        {'title': 'High Speed Networks', 'code': 'XC5071'
-        },
-        {'title': 'Unix Internals', 'code': 'XC5072'
-        },
-        {'title': 'Database Tuning', 'code': 'XT5075'
-        },
-        {'title': 'Software Project Management', 'code': 'XT5076'
-        },
-        {'title': 'Personal Software Processes', 'code': 'XT5077'
-        }
-      ]
+    {'title': 'Which of the following is NOT a barrier to active listening?', 'options': 'Prejudice<I>Daydreaming<I>Empathy<I>Distractions', 'correct_answer': '3', 'chosen_answer': None
     },
-    {'title': 'Audit Course', 'credits': 0, 'periods': 2, 'code': '', 'type': 'Theory', 'choices': [
-        {'title': 'English for Research Paper Writing', 'code': 'AX5091'
-        },
-        {'title': 'Disaster Management', 'code': 'AX5092'
-        },
-        {'title': 'Sanskrit for Technical Knowledge', 'code': 'AX5093'
-        },
-        {'title': 'Value Education', 'code': 'AX5094'
-        },
-        {'title': 'Constitution of India', 'code': 'AX5095'
-        },
-        {'title': 'Pedagogy Studies', 'code': 'AX5096'
-        },
-        {'title': 'Stress Management by Yoga', 'code': 'AX5097'
-        },
-        {'title': 'Personality Development through Life Enlightenment Skills', 'code': 'AX5098'
-        },
-        {'title': 'Unnat Bharath Abhiyan', 'code': 'AX5099'
-        }
-      ]
+    {'title': "What does 'reflecting feelings' mean in active listening?", 'options': "Mirroring the speaker's physical movements<I>Identifying and acknowledging the speaker's emotions<I>Ignoring the speaker's emotions<I>Expressing your own feelings", 'correct_answer': '2', 'chosen_answer': None
     },
-    {'title': 'Software Development Laboratory', 'credits': 2, 'periods': 4, 'code': 'XC5561', 'type': 'Lab'
+    {'title': "What is the purpose of using 'minimal encouragers' in active listening?", 'options': "To interrupt the speaker<I>To show the speaker you're not interested<I>To encourage the speaker to continue talking<I>To change the subject", 'correct_answer': '3', 'chosen_answer': None
+    },
+    {'title': 'Giving advice is generally discouraged during active listening because:', 'options': 'It is always helpful<I>It can shut down the speaker<I>It saves time<I>It shows you care', 'correct_answer': '2', 'chosen_answer': None
+    },
+    {'title': 'Which of the following is an example of an open-ended question?', 'options': 'Are you feeling better?<I>Did you enjoy the movie?<I>What are your thoughts on this issue?<I>Is that what you meant?', 'correct_answer': '3', 'chosen_answer': None
+    },
+    {'title': 'What is the role of empathy in active listening?', 'options': "To feel sorry for the speaker<I>To understand and share the speaker's feelings<I>To judge the speaker's feelings<I>To ignore the speaker's feelings", 'correct_answer': '2', 'chosen_answer': None
+    },
+    {'title': 'Active listening helps to build:', 'options': 'Arguments<I>Misunderstandings<I>Rapport and trust<I>Conflict', 'correct_answer': '3', 'chosen_answer': None
+    },
+    {'title': 'What is the first step in becoming an active listener?', 'options': 'Formulating a response<I>Avoiding eye contact<I>Paying attention to the speaker<I>Planning your next point', 'correct_answer': '3', 'chosen_answer': None
+    },
+    {'title': 'When actively listening, how should you respond to emotional content?', 'options': "Ignore it and focus on the facts<I>Validate and acknowledge the speaker's feelings<I>Tell the speaker how they should feel<I>Change the subject", 'correct_answer': '2', 'chosen_answer': None
+    },
+    {'title': 'Which of these is NOT a sign of poor listening skills?', 'options': "Interrupting frequently<I>Asking clarifying questions<I>Finishing the speaker's sentences<I>Changing the subject abruptly", 'correct_answer': '2', 'chosen_answer': None
+    },
+    {'title': "What does 'Suspending Judgment' refers to in active listening?", 'options': "Immediately agreeing with the speaker<I>Critiquing the speaker while they are talking<I>Avoiding forming opinions until you fully understand the speaker's point<I>Ignoring the speaker's message", 'correct_answer': '3', 'chosen_answer': None
+    },
+    {'title': 'What is the importance of body language in active listening?', 'options': 'Body language is not important<I>Body language can convey interest and understanding<I>Body language distracts from the message<I>Body language is only for formal situations', 'correct_answer': '2', 'chosen_answer': None
+    },
+    {'title': 'Why is avoiding distractions important for active listening?', 'options': 'Distractions help the speaker focus<I>Distractions do not affect listening<I>Distractions prevent you from fully understanding the speaker<I>Distractions allow you to multitask', 'correct_answer': '3', 'chosen_answer': None
+    },
+    {'title': 'Which of the following is an example of reflecting content?', 'options': 'Saying "I understand exactly how you feel"<I>Summarizing the speaker\'s key points<I>Offering unsolicited advice<I>Sharing a similar personal experience', 'correct_answer': '2', 'chosen_answer': None
+    },
+    {'title': 'Active listening can lead to:', 'options': 'Increased misunderstandings<I>Stronger relationships<I>More frequent arguments<I>Decreased communication', 'correct_answer': '2', 'chosen_answer': None
     }
   ]
 }
