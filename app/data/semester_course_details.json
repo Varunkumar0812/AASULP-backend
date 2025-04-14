@@ -45,7 +45,7 @@
         "type": "Lab"
       },
       {
-        "title": "C Programming Laboratoy",
+        "title": "C Programming Laboratory",
         "credits": 2,
         "periods": 4,
         "code": "XC5161",
@@ -64,7 +64,7 @@
         "type": "Theory"
       },
       {
-        "title": "Transform Techniques and Partil Differential Equations",
+        "title": "Transform Techniques and Partial Differential Equations",
         "credits": 4,
         "periods": 4,
         "code": "MA5251",
@@ -125,7 +125,7 @@
         "type": "Theory"
       },
       {
-        "title": "Microprocessor and Appplications",
+        "title": "Microprocessor and Applications",
         "credits": 4,
         "periods": 5,
         "code": "XC5352",
@@ -636,7 +636,7 @@
             "code": "XT5089"
           },
           {
-            "title": "Comptuer Vision",
+            "title": "Computer Vision",
             "code": "XC5076"
           },
           {

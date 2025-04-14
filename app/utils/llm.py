@@ -8,6 +8,7 @@ load_dotenv()
 client = genai.Client(api_key=os.getenv("AI_API_KEY"))
 
 
+# AI Call to get the Course Roadmap
 def getCourseRoadmap(semester, course):
     # A: Read and stringify JSON from file
     with open(
@@ -136,6 +137,7 @@ def getCourseRoadmap(semester, course):
         return {}
 
 
+# AI Call to get the Resources for a Topic
 def getResourceForTopic(topic):
     A = """
                 Book :
@@ -177,6 +179,7 @@ def getResourceForTopic(topic):
         return {}
 
 
+# AI Call to get the Questions for a Topic
 def getQuizQuestions(topics):
     A = """
         Question :
@@ -210,8 +213,3 @@ def getQuizQuestions(topics):
         print("Could not parse JSON. Raw response:")
         print(response.text)
         return {}
-
-
-# Example usage:
-# roadmap = getCourseRoadmap()
-# print(roadmap)

@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from sqlalchemy.orm import Session
+from app.utils.llm import getCourseRoadmap, getResourceForTopic, getQuizQuestions
 from app.dependencies import get_db
 from app.models.models import (
     Course,
@@ -14,17 +15,14 @@ from app.models.models import (
 )
 from app.schemas.startSemester import (
     StartSemesterData,
-    GetAllSemesters,
-    GetAllCourses,
-    GetCourseStatistics,
 )
 import json
-from app.utils.llm import getCourseRoadmap, getResourceForTopic, getQuizQuestions
 
 
 router = APIRouter()
 
 
+# Mark topic as completed
 @router.put("/updateTopicStatus")
 def update_topic_status(topic_id: int = Query(...), db: Session = Depends(get_db)):
     # Step 1: Fetch the topic
@@ -52,6 +50,7 @@ def update_topic_status(topic_id: int = Query(...), db: Session = Depends(get_db
     return {"message": "Topic status updated successfully."}
 
 
+# Update the Attendance for a Course
 @router.put("/updateAttendance")
 def updateAttendance(
     course_id: int = Query(...),
@@ -77,6 +76,7 @@ def updateAttendance(
     }
 
 
+# Update the Marks for an Exam
 @router.put("/updateMarks")
 def updateMarks(
     exam_id: int = Query(...), mark: int = Body(...), db: Session = Depends(get_db)
@@ -295,6 +295,7 @@ def submitQuiz(
     }
 
 
+# Get Questions for a Quiz
 @router.post("/startQuiz")
 def startQuiz(quiz_id: int = Query(...), db: Session = Depends(get_db)):
     quiz = db.query(Quiz).filter(Quiz.quiz_id == quiz_id).first()
@@ -420,6 +421,7 @@ def getTopicResource(topic_id: int = Query(...), db: Session = Depends(get_db)):
     }
 
 
+# Get All Topics, Weeks, Quizzes, Exams for a Course
 @router.get("/getAllTopics")
 def getAllTopics(course_id: int = Query(...), db: Session = Depends(get_db)):
     course = db.query(Course).filter(Course.course_id == course_id).first()
@@ -472,6 +474,7 @@ def getAllTopics(course_id: int = Query(...), db: Session = Depends(get_db)):
     return result
 
 
+# Get Course Statistics
 @router.get("/getCourseStatistics")
 def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_db)):
     course = db.query(Course).filter(Course.course_id == course_id).first()
@@ -551,6 +554,7 @@ def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_d
     return course
 
 
+# Get All Courses
 @router.get("/getAllCourses")
 def getAllCourses(
     user_id: int = Query(...),
