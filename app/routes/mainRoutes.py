@@ -25,6 +25,33 @@ from app.utils.llm import getCourseRoadmap, getResourceForTopic, getQuizQuestion
 router = APIRouter()
 
 
+@router.put("/updateTopicStatus")
+def update_topic_status(topic_id: int = Query(...), db: Session = Depends(get_db)):
+    # Step 1: Fetch the topic
+    topic = db.query(Topic).filter(Topic.topic_id == topic_id).first()
+    if not topic:
+        raise HTTPException(status_code=404, detail="Topic not found")
+
+    # Step 2: Mark the topic as completed
+    topic.status = "Completed"
+    db.commit()
+
+    # Step 3: Get the week the topic belongs to
+    week_id = topic.week_id
+    if not week_id:
+        raise HTTPException(status_code=400, detail="Topic does not belong to any week")
+
+    # Step 4: Check if all topics in that week are completed
+    all_topics = db.query(Topic).filter(Topic.week_id == week_id).all()
+    if all(topic.status == "Completed" for topic in all_topics):
+        week = db.query(Week).filter(Week.week_id == week_id).first()
+        if week:
+            week.status = "Completed"
+            db.commit()
+
+    return {"message": "Topic status updated successfully."}
+
+
 @router.put("/updateAttendance")
 def updateAttendance(
     course_id: int = Query(...),
@@ -711,6 +738,8 @@ def startSemester(
                     title=topic_data.get("title"),
                     description=topic_data.get("description"),
                     week_id=week.week_id,
+                    user_id=payload.user_id,
+                    status="Pending",
                 )
                 db.add(topic)
                 db.commit()
