@@ -60,8 +60,9 @@ def updateMarks(
     if not exam:
         raise HTTPException(status_code=404, detail="Exam not found")
 
-    # Update the mark
+    # Update the mark and status
     exam.mark = mark
+    exam.status = "Completed"  # Set status to Completed
     db.commit()
 
     return {
@@ -230,10 +231,11 @@ def submitQuiz(
             if int(question.correct_answer) == chosen_ans:
                 correct_count += 1
 
-    # Update the score in the Quiz table
+    # Update the score and status in the Quiz table
     quiz = db.query(Quiz).filter(Quiz.quiz_id == quiz_id).first()
     if quiz:
         quiz.score = correct_count
+        quiz.status = "Completed"  # Mark as completed
 
     db.commit()
 
