@@ -108,7 +108,7 @@ def getAttendanceRecord(user_id: int = Query(...), db: Session = Depends(get_db)
     if not semesters:
         raise HTTPException(status_code=404, detail="No semesters found")
 
-    # Sort semesters by number in title
+    # Sort semesters by number in title (e.g., "Semester 1", "Semester 2", etc.)
     semesters.sort(key=lambda x: int(x.title.split()[-1]))
 
     for semester in semesters:
@@ -129,21 +129,24 @@ def getAttendanceRecord(user_id: int = Query(...), db: Session = Depends(get_db)
             else:
                 total_classes_needed = 0  # fallback/default
 
-            # Calculate attended percentage
-            classes_missed = course.attendance or 0
+            # Ensure attendance is treated as integer (handle None)
+            classes_missed = (
+                int(course.attendance) if course.attendance is not None else 0
+            )
             classes_attended = max(total_classes_needed - classes_missed, 0)
 
+            # Calculate percentage attended
             percentage_classes_attended = (
                 (classes_attended / total_classes_needed) * 100
-                if total_classes_needed
+                if total_classes_needed > 0
                 else 0
             )
 
-            # Set runtime attributes
+            # Set computed attributes for each course
             course.total_classes_needed = total_classes_needed
             course.percentage_classes_attended = round(percentage_classes_attended, 2)
 
-        semester.courses = courses  # attach courses
+        semester.courses = courses  # Attach course list to semester
 
     return {
         "status": 200,
@@ -160,7 +163,7 @@ def getAcademicsRecords(user_id: int = Query(...), db: Session = Depends(get_db)
     if not semesters:
         raise HTTPException(status_code=404, detail="No semesters found")
 
-    # Sort semesters based on title (assuming title is like "Semester 1", "Semester 2", etc.)
+    # Sort semesters by title number (e.g., "Semester 1", "Semester 2", etc.)
     semesters.sort(key=lambda x: int(x.title.split()[-1]))
 
     cumulative_grade_points = 0
@@ -176,17 +179,37 @@ def getAcademicsRecords(user_id: int = Query(...), db: Session = Depends(get_db)
         for course in courses:
             exams = db.query(Exam).filter(Exam.course_id == course.course_id).all()
 
-            # Extract marks
-            a1 = next((e.mark for e in exams if e.type == "Assesment 1"), 0)
-            a2 = next((e.mark for e in exams if e.type == "Assesment 2"), 0)
-            end = next((e.mark for e in exams if e.type == "End Semester"), 0)
+            # Safely extract marks with fallback to 0
+            a1 = next(
+                (
+                    e.mark
+                    for e in exams
+                    if e.type == "Assesment 1" and e.mark is not None
+                ),
+                0,
+            )
+            a2 = next(
+                (
+                    e.mark
+                    for e in exams
+                    if e.type == "Assesment 2" and e.mark is not None
+                ),
+                0,
+            )
+            end = next(
+                (
+                    e.mark
+                    for e in exams
+                    if e.type == "End Semester" and e.mark is not None
+                ),
+                0,
+            )
 
             # Calculate total mark
             total_mark = ((a1 + a2) * 0.4) + (end * 0.6)
             course.mark = round(total_mark, 2)
-            db.commit()
 
-            # Convert to grade point
+            # Convert mark to grade point
             if total_mark >= 91:
                 grade_point = 10
             elif total_mark >= 81:
@@ -200,24 +223,23 @@ def getAcademicsRecords(user_id: int = Query(...), db: Session = Depends(get_db)
             else:
                 grade_point = 0  # U grade
 
-            # Weighted grade points
+            # Add weighted grade points
             total_weighted_grade_points += course.credit * grade_point
             total_credits += course.credit
 
-        # Calculate GPA for the semester
+        # GPA for the semester
         gpa = (
             round(total_weighted_grade_points / total_credits, 2)
             if total_credits
             else 0
         )
         semester.gpa = gpa
-        db.commit()
 
-        # Update cumulative GPA calculation
+        # Cumulative values for CGPA
         cumulative_grade_points += total_weighted_grade_points
         cumulative_credits += total_credits
 
-        # Calculate CGPA
+        # CGPA up to this semester
         cgpa = (
             round(cumulative_grade_points / cumulative_credits, 2)
             if cumulative_credits
@@ -225,7 +247,7 @@ def getAcademicsRecords(user_id: int = Query(...), db: Session = Depends(get_db)
         )
         semester.cgpa = cgpa
 
-        # Attach courses with mark to semester
+        # Attach courses
         semester.courses = courses
 
     return {
@@ -597,6 +619,10 @@ def getAllSemesters(user_id: str = Query(...), db: Session = Depends(get_db)):
         semester.credits = total_credits
         semester.status = "OnGoing" if is_ongoing else "Completed"
 
+    # Sort semesters based on the number in the title (e.g., "Semester 1", "Semester 2")
+    semesters.sort(key=lambda x: int(x.title.split()[-1]))
+
+    # Load next semester data from file
     with open(
         "C:/Users/tvaru/Desktop/AI-ASULP/app/data/semester_course_details.json", "r"
     ) as file:
