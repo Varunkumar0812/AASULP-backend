@@ -474,7 +474,6 @@ def getAllTopics(course_id: int = Query(...), db: Session = Depends(get_db)):
     return result
 
 
-# Get Course Statistics
 @router.get("/getCourseStatistics")
 def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_db)):
     course = db.query(Course).filter(Course.course_id == course_id).first()
@@ -482,14 +481,13 @@ def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_d
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
 
-    # Getting all exams and weeks for the course
+    # Get exams and weeks
     exams = (
         db.query(Exam)
         .filter(Exam.course_id == course.course_id)
         .order_by(Exam.rank)
         .all()
     )
-
     weeks = (
         db.query(Week)
         .filter(Week.course_id == course.course_id)
@@ -501,16 +499,13 @@ def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_d
     next_week = next((week for week in weeks if week.status == "Pending"), None)
     course.next_topic = next_week
 
-    # Quiz performance calculation
+    # Stats
     total_quizzes = 0
     completed_quizzes = 0
     quiz_score = 0
-
-    # Course progress calculation
     total_topics = 0
     completed_topics = 0
-
-    quiz_performance = {}
+    quiz_performance = []
 
     for week in weeks:
         topics = (
@@ -525,19 +520,27 @@ def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_d
         week.topics = topics
 
         for quiz in quizzes:
-            quiz_performance[quiz.quiz_id] = {
-                "title": quiz.title,
-                "status": quiz.status,
-                "score": quiz.score,
-            }
+            if quiz.status == "Completed":
+                quiz_performance.append(quiz.score)
+                quiz_score += quiz.score
+                completed_quizzes += 1
 
+        total_quizzes += len(quizzes)
         total_topics += len(topics)
         completed_topics += sum(1 for topic in topics if topic.status == "Completed")
-        total_quizzes += len(quizzes)
-        completed_quizzes += sum(1 for quiz in quizzes if quiz.status == "Completed")
-        quiz_score += sum(quiz.score for quiz in quizzes if quiz.status == "Completed")
 
-    # Attach calculated data to the course
+    # Attendance logic
+    classes_missed = course.attendance or 0
+    if course.periods == 45 or course.periods in [2, 4]:
+        total_required = 60
+    elif course.periods == 5:
+        total_required = 75
+    else:
+        total_required = 0
+
+    classes_attended = max(total_required - classes_missed, 0)
+
+    # Attach calculated values
     course.quiz_performance = quiz_performance
     course.total_quizzes = total_quizzes
     course.completed_quizzes = completed_quizzes
@@ -549,6 +552,7 @@ def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_d
     course.progress = (
         round((completed_topics / total_topics) * 100, 2) if total_topics > 0 else 0
     )
+    course.classes_attended = classes_attended
     course.exams = exams
 
     return course
