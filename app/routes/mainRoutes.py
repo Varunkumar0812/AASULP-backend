@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Body
 from sqlalchemy.orm import Session
+from app.utils.llm import getCourseRoadmap, getResourceForTopic, getQuizQuestions
 from app.dependencies import get_db
 from app.models.models import (
     Course,
@@ -14,17 +15,14 @@ from app.models.models import (
 )
 from app.schemas.startSemester import (
     StartSemesterData,
-    GetAllSemesters,
-    GetAllCourses,
-    GetCourseStatistics,
 )
 import json
-from app.utils.llm import getCourseRoadmap, getResourceForTopic, getQuizQuestions
 
 
 router = APIRouter()
 
 
+# Mark topic as completed
 @router.put("/updateTopicStatus")
 def update_topic_status(topic_id: int = Query(...), db: Session = Depends(get_db)):
     # Step 1: Fetch the topic
@@ -52,6 +50,7 @@ def update_topic_status(topic_id: int = Query(...), db: Session = Depends(get_db
     return {"message": "Topic status updated successfully."}
 
 
+# Update the Attendance for a Course
 @router.put("/updateAttendance")
 def updateAttendance(
     course_id: int = Query(...),
@@ -77,6 +76,7 @@ def updateAttendance(
     }
 
 
+# Update the Marks for an Exam
 @router.put("/updateMarks")
 def updateMarks(
     exam_id: int = Query(...), mark: int = Body(...), db: Session = Depends(get_db)
@@ -295,6 +295,7 @@ def submitQuiz(
     }
 
 
+# Get Questions for a Quiz
 @router.post("/startQuiz")
 def startQuiz(quiz_id: int = Query(...), db: Session = Depends(get_db)):
     quiz = db.query(Quiz).filter(Quiz.quiz_id == quiz_id).first()
@@ -420,6 +421,7 @@ def getTopicResource(topic_id: int = Query(...), db: Session = Depends(get_db)):
     }
 
 
+# Get All Topics, Weeks, Quizzes, Exams for a Course
 @router.get("/getAllTopics")
 def getAllTopics(course_id: int = Query(...), db: Session = Depends(get_db)):
     course = db.query(Course).filter(Course.course_id == course_id).first()
@@ -479,14 +481,13 @@ def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_d
     if not course:
         raise HTTPException(status_code=404, detail="Course not found")
 
-    # Getting all exams and weeks for the course
+    # Get exams and weeks
     exams = (
         db.query(Exam)
         .filter(Exam.course_id == course.course_id)
         .order_by(Exam.rank)
         .all()
     )
-
     weeks = (
         db.query(Week)
         .filter(Week.course_id == course.course_id)
@@ -498,16 +499,13 @@ def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_d
     next_week = next((week for week in weeks if week.status == "Pending"), None)
     course.next_topic = next_week
 
-    # Quiz performance calculation
+    # Stats
     total_quizzes = 0
     completed_quizzes = 0
     quiz_score = 0
-
-    # Course progress calculation
     total_topics = 0
     completed_topics = 0
-
-    quiz_performance = {}
+    quiz_performance = []
 
     for week in weeks:
         topics = (
@@ -522,19 +520,27 @@ def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_d
         week.topics = topics
 
         for quiz in quizzes:
-            quiz_performance[quiz.quiz_id] = {
-                "title": quiz.title,
-                "status": quiz.status,
-                "score": quiz.score,
-            }
+            if quiz.status == "Completed":
+                quiz_performance.append(quiz.score)
+                quiz_score += quiz.score
+                completed_quizzes += 1
 
+        total_quizzes += len(quizzes)
         total_topics += len(topics)
         completed_topics += sum(1 for topic in topics if topic.status == "Completed")
-        total_quizzes += len(quizzes)
-        completed_quizzes += sum(1 for quiz in quizzes if quiz.status == "Completed")
-        quiz_score += sum(quiz.score for quiz in quizzes if quiz.status == "Completed")
 
-    # Attach calculated data to the course
+    # Attendance logic
+    classes_missed = course.attendance or 0
+    if course.periods == 45 or course.periods in [2, 4]:
+        total_required = 60
+    elif course.periods == 5:
+        total_required = 75
+    else:
+        total_required = 0
+
+    classes_attended = max(total_required - classes_missed, 0)
+
+    # Attach calculated values
     course.quiz_performance = quiz_performance
     course.total_quizzes = total_quizzes
     course.completed_quizzes = completed_quizzes
@@ -546,11 +552,13 @@ def getCourseStatistics(course_id: int = Query(...), db: Session = Depends(get_d
     course.progress = (
         round((completed_topics / total_topics) * 100, 2) if total_topics > 0 else 0
     )
+    course.classes_attended = classes_attended
     course.exams = exams
 
     return course
 
 
+# Get All Courses
 @router.get("/getAllCourses")
 def getAllCourses(
     user_id: int = Query(...),

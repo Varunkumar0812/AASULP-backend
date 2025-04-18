@@ -14,18 +14,3 @@ class StartSemesterData(BaseModel):
     start_date: str
     end_date: str
     electives: List[Elective]
-
-
-class GetAllSemesters(BaseModel):
-    user_id: int
-
-
-class GetAllCourses(BaseModel):
-    user_id: int
-    semester_id: int
-
-
-class GetCourseStatistics(BaseModel):
-    user_id: int
-    semester_id: int
-    course_id: int
