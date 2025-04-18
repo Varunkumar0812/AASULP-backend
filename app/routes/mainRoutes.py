@@ -348,7 +348,7 @@ def startQuiz(quiz_id: int = Query(...), db: Session = Depends(get_db)):
 
     db.commit()
 
-    # ✅ Step 6: Refetch the quiz and questions from DB
+    
     refreshed_quiz = db.query(Quiz).filter(Quiz.quiz_id == quiz_id).first()
     created_questions = db.query(Questions).filter(Questions.quiz_id == quiz_id).all()
 
