@@ -607,7 +607,8 @@ def getAllSemesters(user_id: str = Query(...), db: Session = Depends(get_db)):
         courses = (
             db.query(Course)
             .filter(
-                Course.semester_id == semester.semester_id, Course.user_id == user_id
+                Course.semester_id == semester.semester_id,
+                Course.user_id == user_id,
             )
             .all()
         )
@@ -631,27 +632,35 @@ def getAllSemesters(user_id: str = Query(...), db: Session = Depends(get_db)):
     semesters.sort(key=lambda x: int(x.title.split()[-1]))
 
     # Load next semester data from file
-    with open(
-        "C:/Users/tvaru/Desktop/AI-ASULP/app/data/semester_course_details.json", "r"
-    ) as file:
-        next_semester_data = json.load(file)[len(semesters)]
+    try:
+        with open(
+            r"C:\Users\prano\Desktop\SEM8\CI Project\auslp-backend\AASULP-backend\app\data\semester_course_details.json",
+            "r",
+        ) as file:
+            semester_data_list = json.load(file)
 
-    electives = [
-        {"title": course["title"], "choices": course["choices"]}
-        for course in next_semester_data["courses"]
-        if course["code"] == ""
-    ]
+        if len(semesters) < len(semester_data_list):
+            next_semester_data = semester_data_list[len(semesters)]
 
-    nxt_semester = {
-        "title": next_semester_data["title"],
-        "status": "Not Started",
-        "gpa": 0.0,
-        "electives": electives,
-    }
+            electives = [
+                {"title": course["title"], "choices": course["choices"]}
+                for course in next_semester_data["courses"]
+                if course["code"] == ""
+            ]
 
-    semesters.append(nxt_semester)
+            nxt_semester = {
+                "title": next_semester_data["title"],
+                "status": "Not Started",
+                "gpa": 0.0,
+                "electives": electives,
+            }
+
+            semesters.append(nxt_semester)
+
+    except Exception as e:
+        print(f"Error reading next semester data: {e}")
+
     return semesters
-
 
 # Initiate A Semester
 @router.post("/startSemester")
@@ -661,7 +670,7 @@ def startSemester(
 ):
     # Step 1: Load all semester data from your JSON file
     with open(
-        "C:/Users/tvaru/Desktop/AI-ASULP/app/data/semester_course_details.json", "r"
+        r"C:\Users\prano\Desktop\SEM8\CI Project\auslp-backend\AASULP-backend\app\data\semester_course_details.json", "r"
     ) as file:
         data = json.load(file)
 
