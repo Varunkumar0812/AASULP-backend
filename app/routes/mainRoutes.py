@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, Query, Body
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 from app.utils.llm import getCourseRoadmap, getResourceForTopic, getQuizQuestions
 from app.dependencies import get_db
@@ -349,7 +350,6 @@ def startQuiz(quiz_id: int = Query(...), db: Session = Depends(get_db)):
 
     db.commit()
 
-    
     refreshed_quiz = db.query(Quiz).filter(Quiz.quiz_id == quiz_id).first()
     created_questions = db.query(Questions).filter(Questions.quiz_id == quiz_id).all()
 
@@ -628,20 +628,41 @@ def getAllSemesters(user_id: str = Query(...), db: Session = Depends(get_db)):
         semester.credits = total_credits
         semester.status = "OnGoing" if is_ongoing else "Completed"
 
-    # Sort semesters based on the number in the title (e.g., "Semester 1", "Semester 2")
+    # Sort semesters numerically
     semesters.sort(key=lambda x: int(x.title.split()[-1]))
 
-    # Load next semester data from file
+    # Read semester data from file
     try:
         with open(
-            r"C:\Users\prano\Desktop\SEM8\CI Project\auslp-backend\AASULP-backend\app\data\semester_course_details.json",
+            r"C:\Users\tvaru\Desktop\AI-ASULP\app\data\semester_course_details.json",
             "r",
         ) as file:
             semester_data_list = json.load(file)
 
-        if len(semesters) < len(semester_data_list):
-            next_semester_data = semester_data_list[len(semesters)]
+        total_semesters = len(semesters)
 
+        if total_semesters == 0:
+            # Return only the first semester
+            first_semester = semester_data_list[0]
+            electives = [
+                {"title": course["title"], "choices": course["choices"]}
+                for course in first_semester["courses"]
+                if course["code"] == ""
+            ]
+            return JSONResponse(
+                content=[
+                    {
+                        "title": first_semester["title"],
+                        "status": "Not Started",
+                        "gpa": 0.0,
+                        "electives": electives,
+                    }
+                ]
+            )
+
+        elif total_semesters < 10 and total_semesters < len(semester_data_list):
+            # Add next semester
+            next_semester_data = semester_data_list[total_semesters]
             electives = [
                 {"title": course["title"], "choices": course["choices"]}
                 for course in next_semester_data["courses"]
@@ -662,6 +683,7 @@ def getAllSemesters(user_id: str = Query(...), db: Session = Depends(get_db)):
 
     return semesters
 
+
 # Initiate A Semester
 @router.post("/startSemester")
 def startSemester(
@@ -670,7 +692,8 @@ def startSemester(
 ):
     # Step 1: Load all semester data from your JSON file
     with open(
-        r"C:\Users\prano\Desktop\SEM8\CI Project\auslp-backend\AASULP-backend\app\data\semester_course_details.json", "r"
+        r"C:\Users\tvaru\Desktop\AI-ASULP\app\data\semester_course_details.json",
+        "r",
     ) as file:
         data = json.load(file)
 

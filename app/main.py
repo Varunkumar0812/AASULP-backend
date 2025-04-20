@@ -51,7 +51,7 @@ async def verify_token(request: Request, call_next):
     if request.method == "OPTIONS":
         return await call_next(request)
 
-    if request.url.path in ["/docs", "/openapi.json", "/auth/login"]:
+    if request.url.path in ["/docs", "/openapi.json", "/auth/login", "/api/users"]:
         return await call_next(request)
 
     auth_header = request.headers.get("Authorization")

@@ -12,7 +12,7 @@ client = genai.Client(api_key=os.getenv("AI_API_KEY"))
 def getCourseRoadmap(semester, course):
     # A: Read and stringify JSON from file
     with open(
-        r"C:\Users\prano\Desktop\SEM8\CI Project\auslp-backend\AASULP-backend\app\data\semester_course_details.json", "r"
+        r"C:\Users\tvaru\Desktop\AI-ASULP\app\data\semester_course_details.json", "r"
     ) as f:
         json_data = json.load(f)
     A = json.dumps(json_data, indent=2)  # Pretty-printed for readability
@@ -212,5 +212,5 @@ def getQuizQuestions(topics):
     except json.JSONDecodeError:
         print("Could not parse JSON. Raw response:")
         print(response.text)
-        
+
         return {}
