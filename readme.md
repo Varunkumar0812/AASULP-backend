@@ -70,4 +70,4 @@ A simple **JWT-based authentication** system is implemented for secure access to
 
 ## Frontend Repository
 
-The frontend of this platform is built using Vue.js and can be found here: [Frontend Repository](https://github.com/Varunkumar0812/AASULP-frontend) <!-- Replace # with actual link -->
+The frontend of this platform is built using React Js and Tailwind CSS and can be found here: [Frontend Repository](https://github.com/Varunkumar0812/AASULP-frontend) <!-- Replace # with actual link -->
